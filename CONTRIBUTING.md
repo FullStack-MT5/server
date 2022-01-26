@@ -25,7 +25,7 @@
   - draft   -> WIP (no reviews)
   - open    -> ready for review
 
-  - No push on someone else's PR
+- No push on someone else's PR
 
 - Reviewers should prefix their comments with one of these keywords:
   - [suggestion]      -> suggestion, could be ignored
