@@ -1,0 +1,5 @@
+# Editor settings
+.vscode/
+
+# Env files
+.env
