@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/benchttp/server/pkg/httplog"
 	"github.com/gorilla/mux"
 )
 
@@ -29,6 +30,7 @@ func (s *Server) Start() error {
 func (s *Server) init() {
 	s.router = mux.NewRouter().StrictSlash(true)
 	s.registerRoutes()
+	s.router.Use(httplog.Request)
 	s.Handler = s.router
 }
 
