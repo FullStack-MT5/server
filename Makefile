@@ -36,7 +36,7 @@ test:
 
 .PHONY: Build
 build:
-	@go build -v main.go
+	@go build -v cmd/main.go
 
 # Docs
 
