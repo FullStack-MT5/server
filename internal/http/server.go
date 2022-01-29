@@ -4,19 +4,22 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/benchttp/server/internal/repository"
 	"github.com/benchttp/server/pkg/httplog"
 	"github.com/gorilla/mux"
 )
 
 type Server struct {
 	*http.Server
-	router *mux.Router
+	router     *mux.Router
+	Repository *repository.Repository
 }
 
 // NewServer returns a Server with specified configuration parameters.
-func NewServer(addr string) *Server {
+func NewServer(addr string, repo *repository.Repository) *Server {
 	return &Server{
-		Server: &http.Server{Addr: addr},
+		Server:     &http.Server{Addr: addr},
+		Repository: repo,
 	}
 }
 

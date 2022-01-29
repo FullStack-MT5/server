@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/benchttp/server/internal/http"
+	"github.com/benchttp/server/internal/repository"
 )
 
 func main() {
@@ -12,7 +13,12 @@ func main() {
 	flag.Parse()
 	addr := ":" + *port
 
-	srv := http.NewServer(addr)
+	repo, err := repository.New(nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	srv := http.NewServer(addr, repo)
 	if err := srv.Start(); err != nil {
 		log.Fatal(err)
 	}
