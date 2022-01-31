@@ -46,5 +46,5 @@ func (s *Server) registerRoutes() {
 func handleRoot(rw http.ResponseWriter, r *http.Request) {
 	rw.Header().Set("Content-Type", "text/html; charset=utf-8")
 	rw.WriteHeader(200)
-	rw.Write([]byte("👋 🌍"))
+	rw.Write([]byte("👋 🌍")) //nolint
 }

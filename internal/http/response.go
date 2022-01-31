@@ -20,7 +20,7 @@ func respondJSON(w http.ResponseWriter, code int, data interface{}) {
 		respondHTTPError(w, errInternal)
 		return
 	}
-	w.Write(resp)
+	w.Write(resp) //nolint
 }
 
 // respondHTTPError formats the given error and sends it as JSON.
