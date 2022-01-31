@@ -10,7 +10,7 @@ type Repository struct {
 }
 
 // New returns a new repository given configuration parameters.
-func New(cfg interface{}) (*Repository, error) {
+func New() (*Repository, error) {
 	return &Repository{}, nil
 }
 

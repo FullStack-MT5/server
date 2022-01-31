@@ -13,7 +13,7 @@ func main() {
 	flag.Parse()
 	addr := ":" + *port
 
-	repo, err := repository.New(nil)
+	repo, err := repository.New()
 	if err != nil {
 		log.Fatal(err)
 	}
