@@ -39,10 +39,12 @@ func (s *Server) init() {
 
 func (s *Server) registerRoutes() {
 	s.router.HandleFunc("/", handleRoot)
+	s.router.HandleFunc("/report", s.handleGetReport).Methods("GET")
+	s.router.HandleFunc("/report", s.handlePostReport).Methods("POST")
 }
 
-func handleRoot(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	w.WriteHeader(200)
-	w.Write([]byte("👋 🌍"))
+func handleRoot(rw http.ResponseWriter, r *http.Request) {
+	rw.Header().Set("Content-Type", "text/html; charset=utf-8")
+	rw.WriteHeader(200)
+	rw.Write([]byte("👋 🌍"))
 }
