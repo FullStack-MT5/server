@@ -6,8 +6,9 @@ import (
 )
 
 var (
-	errNotFound = httpError{nil, http.StatusText(http.StatusNotFound), http.StatusNotFound}
-	errInternal = httpError{nil, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError}
+	errBadRequest = httpError{nil, http.StatusText(http.StatusBadRequest), http.StatusBadRequest}
+	errNotFound   = httpError{nil, http.StatusText(http.StatusNotFound), http.StatusNotFound}
+	errInternal   = httpError{nil, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError}
 )
 
 // httpError is a high-level error that wraps another error

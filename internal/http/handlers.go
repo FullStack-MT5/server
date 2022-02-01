@@ -10,7 +10,7 @@ import (
 func (s *Server) handlePostReport(rw http.ResponseWriter, r *http.Request) {
 	report := internal.Report{}
 	if err := json.NewDecoder(r.Body).Decode(&report); err != nil {
-		respondHTTPError(rw, errNotFound)
+		respondHTTPError(rw, errBadRequest)
 		return
 	}
 
@@ -28,7 +28,7 @@ func (s *Server) handleGetReport(rw http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 	report, err := s.Repository.RetrieveReport(id)
 	if err != nil {
-		respondHTTPError(rw, errNotFound) // TODO differenciate not found and decoding errors
+		respondHTTPError(rw, errNotFound) // TODO differenciate not found and decoding
 		return
 	}
 	respondJSON(rw, 200, report)
