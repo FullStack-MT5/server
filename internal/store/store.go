@@ -3,6 +3,8 @@ package store
 import (
 	"bytes"
 	"encoding/gob"
+	"fmt"
+	"io"
 
 	"github.com/peterbourgon/diskv/v3"
 )
@@ -38,34 +40,31 @@ func NewDefault() Store {
 	return New(DefaultBasePath, DefaultCacheSizeMax)
 }
 
-// Set writes the key-value pair to the disk, encoding the value to bytes.
-// Returns a non-nil error if any is encountered during the process.
-func (s Store) Set(key string, value interface{}) error {
-	buf := bytes.Buffer{}
-	err := gob.NewEncoder(&buf).Encode(value)
+// Store writes the key-value pair to the disk, encoding value via gob.Encoder.
+// Returns a non-nil error if any is encountered encoding or writing processes.
+func (s Store) Store(key string, value interface{}) error {
+	buf := &bytes.Buffer{}
+	err := gob.NewEncoder(buf).Encode(value)
 	if err != nil {
 		return err
 	}
 	return s.disk.Write(key, buf.Bytes())
 }
 
-// Get reads the key and returns the decoded value.
-// Returns a non-nil error if any is encountered during the process.
-func (s Store) Get(key string) (value interface{}, err error) {
+// Load reads the key and loads the value into dst. The value is decoded
+// via gob.Decoder. Returns a non-nil error if any is encountered during
+// reading or decoding processes.
+func (s Store) Load(key string, dst interface{}) error {
 	bslice, err := s.disk.Read(key)
 	if err != nil {
-		return nil, err
+		return fmt.Errorf("error reading disk: %#v", err)
 	}
 
-	buf := bytes.Buffer{}
-	_, err = buf.Write(bslice)
-	if err != nil {
-		return nil, err
+	buf := bytes.NewBuffer(bslice)
+	err = gob.NewDecoder(buf).Decode(dst)
+	if err != nil && err != io.EOF {
+		println(err)
+		return fmt.Errorf("error decoding gob: %#v", err)
 	}
-
-	err = gob.NewDecoder(&buf).Decode(value)
-	if err != nil {
-		return nil, err
-	}
-	return value, nil
+	return nil
 }

@@ -8,22 +8,28 @@ import (
 )
 
 func (s *Server) handlePostReport(rw http.ResponseWriter, r *http.Request) {
-	report := &internal.Report{}
+	report := internal.Report{}
 	if err := json.NewDecoder(r.Body).Decode(&report); err != nil {
 		respondHTTPError(rw, errNotFound)
 		return
 	}
 
-	s.Repository.Report = report
-
-	respondJSON(rw, 201, nil)
+	id, err := s.Repository.StoreReport(report)
+	if err != nil {
+		respondHTTPError(rw, errInternal)
+		return
+	}
+	respondJSON(rw, 201, struct {
+		Id string `json:"id"`
+	}{Id: id})
 }
 
 func (s *Server) handleGetReport(rw http.ResponseWriter, r *http.Request) {
-	if s.Repository.Report == nil {
-		respondHTTPError(rw, errNotFound)
+	id := r.URL.Query().Get("id")
+	report, err := s.Repository.RetrieveReport(id)
+	if err != nil {
+		respondHTTPError(rw, errNotFound) // TODO differenciate not found and decoding errors
 		return
 	}
-
-	respondJSON(rw, 200, s.Repository.Report)
+	respondJSON(rw, 200, report)
 }
