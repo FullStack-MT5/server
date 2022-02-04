@@ -8,8 +8,10 @@ import (
 	"github.com/benchttp/server/internal/repository"
 )
 
+const defaultPort = "9998"
+
 func main() {
-	port := flag.String("port", "9000", "Address for the server to listen on.")
+	port := flag.String("port", defaultPort, "Address for the server to listen on.")
 	flag.Parse()
 	addr := ":" + *port
 
