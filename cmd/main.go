@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/benchttp/server/http"
-	"github.com/benchttp/server/internal/repository"
 )
 
 const defaultPort = "9998"
@@ -15,12 +14,7 @@ func main() {
 	flag.Parse()
 	addr := ":" + *port
 
-	repo, err := repository.New()
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	srv := http.NewServer(addr, repo)
+	srv := http.NewServer(addr)
 	if err := srv.Start(); err != nil {
 		log.Fatal(err)
 	}

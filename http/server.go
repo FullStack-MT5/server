@@ -7,20 +7,17 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/benchttp/server/http/httplog"
-	"github.com/benchttp/server/internal/repository"
 )
 
 type Server struct {
 	*http.Server
-	router     *mux.Router
-	Repository *repository.Repository
+	router *mux.Router
 }
 
 // NewServer returns a Server with specified configuration parameters.
-func NewServer(addr string, repo *repository.Repository) *Server {
+func NewServer(addr string) *Server {
 	return &Server{
-		Server:     &http.Server{Addr: addr},
-		Repository: repo,
+		Server: &http.Server{Addr: addr},
 	}
 }
 
