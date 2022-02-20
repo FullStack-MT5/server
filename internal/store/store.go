@@ -16,7 +16,7 @@ const (
 
 // Store represents a persistent key-value store using
 // the filesystem to store arbitrary data on fhe disk.
-// Under the hood, it uses a cache for increased perfomance.
+// Under the hood, it uses a cache for increased performance.
 type Store struct {
 	disk *diskv.Diskv
 }

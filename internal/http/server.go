@@ -4,9 +4,10 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/mux"
+
 	"github.com/benchttp/server/internal/repository"
 	"github.com/benchttp/server/pkg/httplog"
-	"github.com/gorilla/mux"
 )
 
 type Server struct {
@@ -43,7 +44,7 @@ func (s *Server) registerRoutes() {
 	s.router.HandleFunc("/report", s.handlePostReport).Methods("POST")
 }
 
-func handleRoot(rw http.ResponseWriter, r *http.Request) {
+func handleRoot(rw http.ResponseWriter, _ *http.Request) {
 	rw.Header().Set("Content-Type", "text/html; charset=utf-8")
 	rw.WriteHeader(200)
 	rw.Write([]byte("🖕")) //nolint
