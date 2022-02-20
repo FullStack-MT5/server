@@ -20,15 +20,15 @@ func (s *Server) handlePostReport(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 	respondJSON(rw, 201, struct {
-		Id string `json:"id"`
-	}{Id: id})
+		ID string `json:"id"`
+	}{ID: id})
 }
 
 func (s *Server) handleGetReport(rw http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 	report, err := s.Repository.RetrieveReport(id)
 	if err != nil {
-		respondHTTPError(rw, errNotFound) // TODO differenciate not found and decoding
+		respondHTTPError(rw, errNotFound) // TODO: differentiate not found and decoding
 		return
 	}
 	respondJSON(rw, 200, report)

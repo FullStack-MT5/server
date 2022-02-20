@@ -1,9 +1,10 @@
 package repository
 
 import (
+	"github.com/google/uuid"
+
 	"github.com/benchttp/server/internal"
 	"github.com/benchttp/server/internal/store"
-	"github.com/google/uuid"
 )
 
 // Repository exposes the available operations to access the data layer.
