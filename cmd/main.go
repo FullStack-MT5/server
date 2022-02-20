@@ -1,9 +1,14 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"log"
+	"os"
 
+	"github.com/joho/godotenv"
+
+	"github.com/benchttp/server/firestore"
 	"github.com/benchttp/server/http"
 )
 
@@ -14,7 +19,27 @@ func main() {
 	flag.Parse()
 	addr := ":" + *port
 
-	srv := http.NewServer(addr)
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
+	projectID := os.Getenv("GOOGLE_PROJECT_ID")
+	if projectID == "" {
+		log.Fatalf("GOOGLE_PROJECT_ID variable is not defined")
+	}
+
+	collectionID := os.Getenv("FIRESTORE_COLLECTION_ID")
+	if projectID == "" {
+		log.Fatalf("FIRESTORE_COLLECTION_ID variable is not defined")
+	}
+
+	repo, err := firestore.NewBenchmarkRepository(context.Background(), projectID, collectionID)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	srv := http.NewServer(addr, repo)
 	if err := srv.Start(); err != nil {
 		log.Fatal(err)
 	}
