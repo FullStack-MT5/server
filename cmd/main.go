@@ -28,9 +28,8 @@ func run() error {
 		port = defaultPort
 	}
 
-	err := godotenv.Load(".env")
 	// no error returned here because .env is not deployed
-	if err != nil {
+	if err := godotenv.Load(".env"); err != nil {
 		fmt.Println("no .env file found")
 	}
 

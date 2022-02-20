@@ -1,0 +1,13 @@
+steps:
+  - name: ubuntu
+    args: [bash, ./script/create-env]
+    env: 
+      - GOOGLE_PROJECT_ID=$_GOOGLE_PROJECT_ID
+      - FIRESTORE_COLLECTION_ID=$_FIRESTORE_COLLECTION_ID
+      - PSQL_HOST=$_PSQL_HOST
+      - PSQL_USER=$_PSQL_USER
+      - PSQL_PASSWORD=$_PSQL_PASSWORD
+      - PSQL_NAME=$_PSQL_NAME
+  - name: gcr.io/cloud-builders/gcloud
+    args: [app, deploy]
+    timeout: 1600s
