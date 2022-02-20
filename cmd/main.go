@@ -4,7 +4,7 @@ import (
 	"flag"
 	"log"
 
-	"github.com/benchttp/server/internal/http"
+	"github.com/benchttp/server/http"
 	"github.com/benchttp/server/internal/repository"
 )
 

@@ -6,8 +6,8 @@ import (
 
 	"github.com/gorilla/mux"
 
+	"github.com/benchttp/server/http/httplog"
 	"github.com/benchttp/server/internal/repository"
-	"github.com/benchttp/server/pkg/httplog"
 )
 
 type Server struct {
