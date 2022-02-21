@@ -29,7 +29,7 @@ type Benchmark struct {
 		Success  int           `firestore:"success"`
 		Fail     int           `firestore:"fail"`
 		Duration time.Duration `firestore:"duration"`
-	} `firestore:"records"`
+	} `firestore:"report"`
 
 	Metadata struct {
 		// Config represents the global configuration of the runner.
@@ -43,7 +43,7 @@ type Benchmark struct {
 				Body struct {
 					Type    string `firestore:"type"`
 					Content []byte `firestore:"content"`
-				} `firestore:"runner"`
+				} `firestore:"body"`
 			} `firestore:"request"`
 
 			// Runner contains options relative to the runner.
