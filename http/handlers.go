@@ -2,19 +2,17 @@ package http
 
 import (
 	"encoding/gob"
-	"fmt"
 	"io"
 	"net/http"
 
 	"github.com/benchttp/server"
 )
 
-func (s *Server) handlePostReport(rw http.ResponseWriter, r *http.Request) {
+func (s *Server) handleRetrieveBenchmark(rw http.ResponseWriter, r *http.Request) {
 	b := server.Benchmark{}
 
 	err := gob.NewDecoder(r.Body).Decode(&b)
 	if err != nil && err != io.EOF {
-		fmt.Println(err)
 		respondHTTPError(rw, errBadRequest)
 		return
 	}
@@ -27,7 +25,7 @@ func (s *Server) handlePostReport(rw http.ResponseWriter, r *http.Request) {
 	respondJSON(rw, 201, nil)
 }
 
-func (s *Server) handleGetReport(rw http.ResponseWriter, r *http.Request) {
+func (s *Server) handleCreateBenchmark(rw http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 	report, err := s.Repository.Retrieve(r.Context(), id)
 	if err != nil {
