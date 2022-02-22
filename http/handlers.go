@@ -8,7 +8,7 @@ import (
 	"github.com/benchttp/server"
 )
 
-func (s *Server) handleRetrieveBenchmark(rw http.ResponseWriter, r *http.Request) {
+func (s *Server) handleCreateBenchmark(rw http.ResponseWriter, r *http.Request) {
 	b := server.Benchmark{}
 
 	err := gob.NewDecoder(r.Body).Decode(&b)
@@ -25,7 +25,7 @@ func (s *Server) handleRetrieveBenchmark(rw http.ResponseWriter, r *http.Request
 	respondJSON(rw, 201, nil)
 }
 
-func (s *Server) handleCreateBenchmark(rw http.ResponseWriter, r *http.Request) {
+func (s *Server) handleRetrieveBenchmark(rw http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 	report, err := s.Repository.Retrieve(r.Context(), id)
 	if err != nil {
