@@ -63,6 +63,6 @@ type Benchmark struct {
 			} `firestore:"-"`
 		} `firestore:"config"`
 
-		FinishedAt time.Time `firestore:"finisedAt"`
+		FinishedAt time.Time `firestore:"finishedAt"`
 	} `firestore:"metadata"`
 }

@@ -34,7 +34,7 @@ func NewBenchmarkRepository(ctx context.Context, projectID, collectionID string)
 	return repo, nil
 }
 
-// CloseClient calls the Close method of the interal client
+// CloseClient calls the Close method of the internal client
 // of the BenchmarkRepository.
 func (r BenchmarkRepository) CloseClient() {
 	r.client.Close()
