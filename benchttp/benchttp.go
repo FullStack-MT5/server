@@ -6,11 +6,11 @@ import (
 	"time"
 )
 
-// Benchmark represents the result of a Benchttp benchmark run.
-type Benchmark struct {
-	// Report represents the detailed collection of requests done
+// Report represents the result of a Benchttp benchmark run.
+type Report struct {
+	// Benchmark represents the detailed collection of requests done
 	// during a Benchttp benchmark run.
-	Report struct {
+	Benchmark struct {
 		// Record represents the summary of a HTTP response.
 		Records []struct {
 			Time  time.Duration `firestore:"time"`
@@ -29,7 +29,7 @@ type Benchmark struct {
 		Success  int           `firestore:"success"`
 		Fail     int           `firestore:"fail"`
 		Duration time.Duration `firestore:"duration"`
-	} `firestore:"report"`
+	} `firestore:"benchmark"`
 
 	Metadata struct {
 		// Config represents the global configuration of the runner.

@@ -9,28 +9,31 @@ import (
 )
 
 func (s *Server) handleCreate(rw http.ResponseWriter, r *http.Request) {
-	b := benchttp.Benchmark{}
+	rep := benchttp.Report{}
 
-	err := gob.NewDecoder(r.Body).Decode(&b)
+	err := gob.NewDecoder(r.Body).Decode(&r)
 	if err != nil && err != io.EOF {
 		respondHTTPError(rw, errBadRequest)
 		return
 	}
 
-	_, err = s.Repository.Create(r.Context(), b)
+	_, err = s.ReportService.Create(r.Context(), rep)
 	if err != nil {
 		respondHTTPError(rw, errInternal)
 		return
 	}
+
 	respondJSON(rw, 201, nil)
 }
 
 func (s *Server) handleRetrieve(rw http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
-	report, err := s.Repository.Retrieve(r.Context(), id)
+
+	report, err := s.ReportService.Retrieve(r.Context(), id)
 	if err != nil {
 		respondHTTPError(rw, errNotFound) // TODO differentiate not found and decoding
 		return
 	}
+
 	respondJSON(rw, 200, report)
 }

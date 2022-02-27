@@ -34,12 +34,12 @@ func main() {
 		log.Fatalf("FIRESTORE_COLLECTION_ID variable is not defined")
 	}
 
-	repo, err := firestore.NewBenchmarkRepository(context.Background(), projectID, collectionID)
+	rs, err := firestore.NewReportService(context.Background(), projectID, collectionID)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	srv := server.New(addr, repo)
+	srv := server.New(addr, rs)
 	if err := srv.Start(); err != nil {
 		log.Fatal(err)
 	}
