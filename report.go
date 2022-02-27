@@ -2,7 +2,6 @@ package server
 
 import (
 	"encoding/gob"
-	"io"
 	"net/http"
 
 	"github.com/benchttp/server/benchttp"
@@ -11,8 +10,8 @@ import (
 func (s *Server) createReport(w http.ResponseWriter, r *http.Request) {
 	rep := benchttp.Report{}
 
-	err := gob.NewDecoder(r.Body).Decode(&r)
-	if err != nil && err != io.EOF {
+	err := gob.NewDecoder(r.Body).Decode(&rep)
+	if err != nil {
 		writeError(w, &ErrBadRequest)
 		return
 	}
