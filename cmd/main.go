@@ -8,8 +8,8 @@ import (
 
 	"github.com/joho/godotenv"
 
+	"github.com/benchttp/server"
 	"github.com/benchttp/server/firestore"
-	"github.com/benchttp/server/http"
 )
 
 const defaultPort = "9998"
@@ -39,7 +39,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	srv := http.NewServer(addr, repo)
+	srv := server.New(addr, repo)
 	if err := srv.Start(); err != nil {
 		log.Fatal(err)
 	}

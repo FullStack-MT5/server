@@ -1,4 +1,4 @@
-package http
+package server
 
 import (
 	"fmt"
@@ -7,18 +7,18 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/benchttp/server"
-	"github.com/benchttp/server/http/httplog"
+	"github.com/benchttp/server/benchttp"
+	"github.com/benchttp/server/httplog"
 )
 
 type Server struct {
 	*http.Server
 	router     *mux.Router
-	Repository server.Repository
+	Repository benchttp.Repository
 }
 
-// NewServer returns a Server with specified configuration parameters.
-func NewServer(addr string, repo server.Repository) *Server {
+// New returns a Server with specified configuration parameters.
+func New(addr string, repo benchttp.Repository) *Server {
 	return &Server{
 		Server:     &http.Server{Addr: addr},
 		Repository: repo,

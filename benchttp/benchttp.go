@@ -1,4 +1,4 @@
-package server
+package benchttp
 
 import (
 	"net/http"

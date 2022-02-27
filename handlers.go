@@ -1,15 +1,15 @@
-package http
+package server
 
 import (
 	"encoding/gob"
 	"io"
 	"net/http"
 
-	"github.com/benchttp/server"
+	"github.com/benchttp/server/benchttp"
 )
 
 func (s *Server) handleCreate(rw http.ResponseWriter, r *http.Request) {
-	b := server.Benchmark{}
+	b := benchttp.Benchmark{}
 
 	err := gob.NewDecoder(r.Body).Decode(&b)
 	if err != nil && err != io.EOF {
