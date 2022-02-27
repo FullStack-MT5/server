@@ -29,7 +29,8 @@ func New(addr string, rs benchttp.ReportService) *Server {
 func (s *Server) Start() error {
 	s.init()
 
-	log.Printf("Server listening at http://localhost%s\n", s.Addr)
+	log.Printf("Server listening at %s\n", s.localAddr())
+
 	return s.ListenAndServe()
 }
 
@@ -43,19 +44,6 @@ func (s *Server) init() {
 	s.Handler = s.router
 }
 
-const alphanum20 = "[a-zA-Z0-9]{2,20}"
-
-func (s *Server) registerRoutes() {
-	s.router.HandleFunc("/", handleRoot)
-
-	s.router.HandleFunc("/report", s.handleCreate).Methods("POST")
-
-	s.router.HandleFunc("/report", s.handleRetrieve).Methods("GET").
-		Queries("id", fmt.Sprintf("{id:%s}", alphanum20))
-}
-
-func handleRoot(rw http.ResponseWriter, _ *http.Request) {
-	rw.Header().Set("Content-Type", "text/html; charset=utf-8")
-	rw.WriteHeader(200)
-	rw.Write([]byte("⚡")) //nolint
+func (s *Server) localAddr() string {
+	return fmt.Sprintf("http://localhost:%s", s.Addr)
 }

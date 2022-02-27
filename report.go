@@ -8,7 +8,7 @@ import (
 	"github.com/benchttp/server/benchttp"
 )
 
-func (s *Server) handleCreate(rw http.ResponseWriter, r *http.Request) {
+func (s *Server) createReport(rw http.ResponseWriter, r *http.Request) {
 	rep := benchttp.Report{}
 
 	err := gob.NewDecoder(r.Body).Decode(&r)
@@ -26,7 +26,7 @@ func (s *Server) handleCreate(rw http.ResponseWriter, r *http.Request) {
 	respondJSON(rw, 201, nil)
 }
 
-func (s *Server) handleRetrieve(rw http.ResponseWriter, r *http.Request) {
+func (s *Server) retrieveReport(rw http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
 	report, err := s.ReportService.Retrieve(r.Context(), id)
