@@ -8,32 +8,32 @@ import (
 	"github.com/benchttp/server/benchttp"
 )
 
-func (s *Server) createReport(rw http.ResponseWriter, r *http.Request) {
+func (s *Server) createReport(w http.ResponseWriter, r *http.Request) {
 	rep := benchttp.Report{}
 
 	err := gob.NewDecoder(r.Body).Decode(&r)
 	if err != nil && err != io.EOF {
-		respondHTTPError(rw, errBadRequest)
+		writeError(w, &ErrBadRequest)
 		return
 	}
 
 	_, err = s.ReportService.Create(r.Context(), rep)
 	if err != nil {
-		respondHTTPError(rw, errInternal)
+		writeError(w, &ErrInternal)
 		return
 	}
 
-	respondJSON(rw, 201, nil)
+	w.WriteHeader(201)
 }
 
-func (s *Server) retrieveReport(rw http.ResponseWriter, r *http.Request) {
+func (s *Server) retrieveReport(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
 	report, err := s.ReportService.Retrieve(r.Context(), id)
 	if err != nil {
-		respondHTTPError(rw, errNotFound) // TODO differentiate not found and decoding
+		writeError(w, &ErrInternal) // TODO differentiate not found and decoding
 		return
 	}
 
-	respondJSON(rw, 200, report)
+	writeJSON(w, report, 200)
 }
