@@ -12,9 +12,11 @@ const alphanum20 = "[a-zA-Z0-9]{2,20}"
 func (s *Server) registerRoutes() {
 	s.router.HandleFunc("/", handleRoot)
 
-	s.router.HandleFunc("/report", s.createReport).Methods("POST")
+	v1 := s.router.PathPrefix("/v1").Subrouter()
 
-	s.router.HandleFunc("/report", s.retrieveReport).Methods("GET").
+	v1.HandleFunc("/report", s.createReport).Methods("POST")
+
+	v1.HandleFunc("/report", s.retrieveReport).Methods("GET").
 		Queries("id", fmt.Sprintf("{id:%s}", alphanum20))
 }
 
