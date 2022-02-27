@@ -1,23 +1,24 @@
 package http
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 
-	"github.com/benchttp/server/internal/repository"
-	"github.com/benchttp/server/pkg/httplog"
+	"github.com/benchttp/server"
+	"github.com/benchttp/server/http/httplog"
 )
 
 type Server struct {
 	*http.Server
 	router     *mux.Router
-	Repository *repository.Repository
+	Repository server.Repository
 }
 
 // NewServer returns a Server with specified configuration parameters.
-func NewServer(addr string, repo *repository.Repository) *Server {
+func NewServer(addr string, repo server.Repository) *Server {
 	return &Server{
 		Server:     &http.Server{Addr: addr},
 		Repository: repo,
@@ -33,19 +34,27 @@ func (s *Server) Start() error {
 
 func (s *Server) init() {
 	s.router = mux.NewRouter().StrictSlash(true)
-	s.registerRoutes()
+
 	s.router.Use(httplog.Request)
+
+	s.registerRoutes()
+
 	s.Handler = s.router
 }
 
+const alphanum20 = "[a-zA-Z0-9]{2,20}"
+
 func (s *Server) registerRoutes() {
 	s.router.HandleFunc("/", handleRoot)
-	s.router.HandleFunc("/report", s.handleGetReport).Methods("GET")
-	s.router.HandleFunc("/report", s.handlePostReport).Methods("POST")
+
+	s.router.HandleFunc("/report", s.handleCreate).Methods("POST")
+
+	s.router.HandleFunc("/report", s.handleRetrieve).Methods("GET").
+		Queries("id", fmt.Sprintf("{id:%s}", alphanum20))
 }
 
 func handleRoot(rw http.ResponseWriter, _ *http.Request) {
 	rw.Header().Set("Content-Type", "text/html; charset=utf-8")
 	rw.WriteHeader(200)
-	rw.Write([]byte("🖕")) //nolint
+	rw.Write([]byte("⚡")) //nolint
 }

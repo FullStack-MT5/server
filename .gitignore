@@ -3,4 +3,6 @@
 
 # Env files
 .env
-.data/
+
+# Credentials
+*keys.json
