@@ -18,9 +18,9 @@ type ReportService struct {
 }
 
 // NewReportService returns a new repository wrapping a
-// Firestore client. The internal client uses the given project.
-// The repository only uses collectionID as the collection to
-// create documents to and retrieve documents from.
+// Firestore client. The client uses the given project
+// and create documents to and retrieve documents from
+// the given collection.
 func NewReportService(ctx context.Context, projectID, collectionID string) (*ReportService, error) {
 	client, err := firestore.NewClient(ctx, projectID)
 	if err != nil {
@@ -58,7 +58,7 @@ func (s ReportService) Create(ctx context.Context, data benchttp.Report) (string
 
 // Retrieve retrieves a document from Firestore given its ID.
 // Returns an error if the document could not be found or if
-// the document could not be converted into an Report struct.
+// the document could not be converted into a Report struct.
 func (s ReportService) Retrieve(ctx context.Context, id string) (benchttp.Report, error) {
 	doc, err := s.collection().Doc(id).Get(ctx)
 	if err != nil {
