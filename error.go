@@ -47,29 +47,12 @@ func (e *httpError) Unwrap() error {
 	return e.inner
 }
 
-// errorCode tries to read err as httpError to extract
-// its code. Default to 500 if err is not httpError or nil.
-func errorCode(err error) int {
+// httpErrorOf tries to read err as httpError.
+// Defaults to ErrInternal if err is not an httpError.
+func httpErrorOf(err error) *httpError {
 	var e *httpError
-
-	if err == nil {
-		return 500
-	} else if errors.As(err, &e) {
-		return e.Code
+	if errors.As(err, &e) && e != nil {
+		return e
 	}
-	return 500
-}
-
-// errorCode tries to read err as httpError to extract
-// its message. Default to "Internal Server Error" if
-// err is not httpError or nil.
-func errorMessage(err error) string {
-	var e *httpError
-
-	if err == nil {
-		return http.StatusText(500)
-	} else if errors.As(err, &e) {
-		return e.Message
-	}
-	return http.StatusText(500)
+	return &ErrInternal
 }

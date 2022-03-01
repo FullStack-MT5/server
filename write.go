@@ -7,21 +7,20 @@ import (
 )
 
 // writeError writes err to w in JSON format. If err is
-// internal, obfuscates message and logs it the stdout.
+// internal, obfuscates message and logs it to stdout.
 func writeError(w http.ResponseWriter, err error) {
-	code := errorCode(err)
-	msg := errorMessage(err)
+	e := httpErrorOf(err)
+	message := e.Message
 
-	if code >= http.StatusInternalServerError {
+	if e.Code >= http.StatusInternalServerError {
 		// Obfuscate message.
-		msg = http.StatusText(code)
+		message = http.StatusText(e.Code)
 	}
 	// TODO verbose mode and/or logging to file.
 	log.Println(err.Error())
 
 	w.Header().Set("X-Content-Type-Options", "nosniff")
-
-	writeJSON(w, httpError{Message: msg}, code)
+	writeJSON(w, httpError{Message: message}, e.Code)
 }
 
 // writeJSON writes data to w in JSON format and sets the response satus code.
