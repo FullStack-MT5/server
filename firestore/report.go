@@ -21,23 +21,22 @@ type ReportService struct {
 // Firestore client. The client uses the given project
 // and create documents to and retrieve documents from
 // the given collection.
-func NewReportService(ctx context.Context, projectID, collectionID string) (*ReportService, error) {
+func NewReportService(ctx context.Context, projectID, collectionID string) (ReportService, error) {
 	client, err := firestore.NewClient(ctx, projectID)
 	if err != nil {
-		return nil, err
+		return ReportService{}, err
 	}
 
-	s := &ReportService{
+	s := ReportService{
 		client:       client,
 		collectionID: collectionID,
 	}
 	return s, nil
 }
 
-// CloseClient calls the Close method of the internal client
-// of the ReportService.
-func (s ReportService) CloseClient() {
-	s.client.Close()
+// Close closes the connection to Firestore client.
+func (s ReportService) Close() error {
+	return s.client.Close()
 }
 
 // collection returns the collection used for this ReportService.
