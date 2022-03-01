@@ -26,11 +26,15 @@ func (s *Server) createReport(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) retrieveReport(w http.ResponseWriter, r *http.Request) {
-	id := r.URL.Query().Get("id")
+	id, err := pathParam(r, idParam)
+	if err != nil {
+		writeError(w, ErrBadRequest.Wrap(err))
+		return
+	}
 
 	report, err := s.ReportService.Retrieve(r.Context(), id)
 	if err != nil {
-		writeError(w, &ErrInternal) // TODO differentiate not found and decoding
+		writeError(w, ErrNotFound.Wrap(err)) // TODO differentiate not found and decoding
 		return
 	}
 
