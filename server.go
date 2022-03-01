@@ -45,5 +45,5 @@ func (s *Server) init() {
 }
 
 func (s *Server) localAddr() string {
-	return fmt.Sprintf("http://localhost:%s", s.Addr)
+	return fmt.Sprintf("http://localhost%s", s.Addr)
 }
