@@ -29,7 +29,7 @@ func writeJSON(w http.ResponseWriter, data interface{}, code int) {
 	w.WriteHeader(code)
 
 	if err := json.NewEncoder(w).Encode(data); err != nil {
-		writeError(w, &ErrInternal)
-		return
+		// Fallback to plain text encoding.
+		http.Error(w, ErrInternal.Message, ErrInternal.Code)
 	}
 }
