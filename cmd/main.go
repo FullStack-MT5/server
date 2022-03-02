@@ -11,6 +11,7 @@ import (
 
 	"github.com/benchttp/server"
 	"github.com/benchttp/server/firestore"
+	"github.com/benchttp/server/shutdown"
 )
 
 const (
@@ -19,50 +20,44 @@ const (
 )
 
 func main() {
-	closeHandle, err := run()
+	ctx, cancel := context.WithCancel(context.Background())
+	go shutdown.ListenInterrupt(cancel)
 
+	shutdownHandle, err := run(ctx)
 	if err != nil {
-		closeHandle.close()
+		shutdownHandle.Call() // nolint
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 
-	if err := closeHandle.close(); err != nil {
+	// Wait for interrupt.
+	<-ctx.Done()
+
+	if err := shutdownHandle.Call(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 }
 
-// shutdownHandle
-type shutdownHandle struct {
-	closeFunc func() error
-}
-
-func (c *shutdownHandle) close() error {
-	return c.closeFunc()
-}
-
-func run() (*shutdownHandle, error) {
-	c := &shutdownHandle{}
-
+func run(ctx context.Context) (*shutdown.Handle, error) {
 	configPath := flag.String("config", defaultConfigPath, "")
 
 	flag.Parse()
 
 	config, err := readConfigFile(*configPath)
 	if err != nil {
-		return c, err
+		return &shutdown.Handle{}, err
 	}
 
 	rs, err := firestore.NewReportService(context.Background(), config.project, config.collection)
 	if err != nil {
-		return c, err
+		return &shutdown.Handle{}, err
 	}
 
 	srv := server.New(config.addr, rs)
 
-	c.closeFunc = func() error {
-		if err := srv.Close(); err != nil {
+	handle := shutdown.NewHandle(func() error {
+		if err := srv.Shutdown(ctx); err != nil {
 			return err
 		}
 
@@ -71,9 +66,9 @@ func run() (*shutdownHandle, error) {
 		}
 
 		return nil
-	}
+	})
 
-	return c, srv.Start()
+	return handle, srv.Start()
 }
 
 type config struct {
