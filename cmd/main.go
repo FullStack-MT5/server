@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
+	"errors"
 	"flag"
-	"log"
+	"fmt"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -12,35 +13,102 @@ import (
 	"github.com/benchttp/server/firestore"
 )
 
-const defaultPort = "9998"
+const (
+	defaultConfigPath = ".env"
+	defaultPort       = "9998"
+)
 
 func main() {
-	port := flag.String("port", defaultPort, "Address for the server to listen on.")
+	closeHandle, err := run()
+
+	if err != nil {
+		closeHandle.close()
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+
+	if err := closeHandle.close(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+}
+
+// shutdownHandle
+type shutdownHandle struct {
+	closeFunc func() error
+}
+
+func (c *shutdownHandle) close() error {
+	return c.closeFunc()
+}
+
+func run() (*shutdownHandle, error) {
+	c := &shutdownHandle{}
+
+	configPath := flag.String("config", defaultConfigPath, "")
+
 	flag.Parse()
-	addr := ":" + *port
 
-	err := godotenv.Load(".env")
+	config, err := readConfigFile(*configPath)
 	if err != nil {
-		log.Fatalf("Error loading .env file")
+		return c, err
 	}
 
-	projectID := os.Getenv("GOOGLE_PROJECT_ID")
-	if projectID == "" {
-		log.Fatalf("GOOGLE_PROJECT_ID variable is not defined")
-	}
-
-	collectionID := os.Getenv("FIRESTORE_COLLECTION_ID")
-	if projectID == "" {
-		log.Fatalf("FIRESTORE_COLLECTION_ID variable is not defined")
-	}
-
-	rs, err := firestore.NewReportService(context.Background(), projectID, collectionID)
+	rs, err := firestore.NewReportService(context.Background(), config.project, config.collection)
 	if err != nil {
-		log.Fatal(err)
+		return c, err
 	}
 
-	srv := server.New(addr, rs)
-	if err := srv.Start(); err != nil {
-		log.Fatal(err)
+	srv := server.New(config.addr, rs)
+
+	c.closeFunc = func() error {
+		if err := srv.Close(); err != nil {
+			return err
+		}
+
+		if err := rs.Close(); err != nil {
+			return err
+		}
+
+		return nil
 	}
+
+	return c, srv.Start()
+}
+
+type config struct {
+	addr       string
+	project    string
+	collection string
+}
+
+func defaultConfig() config {
+	return config{
+		addr: ":" + defaultPort,
+	}
+}
+
+func readConfigFile(file string) (config, error) {
+	config := defaultConfig()
+
+	if err := godotenv.Load(file); err != nil {
+		return config, err
+	}
+
+	port := os.Getenv("PORT")
+	if port != "" {
+		config.addr = ":" + port
+	}
+
+	config.project = os.Getenv("GOOGLE_PROJECT_ID")
+	if config.project == "" {
+		return config, errors.New("env variable GOOGLE_PROJECT_ID is not defined")
+	}
+
+	config.collection = os.Getenv("FIRESTORE_COLLECTION_ID")
+	if config.collection == "" {
+		return config, errors.New("env variable FIRESTORE_COLLECTION_ID is not defined")
+	}
+
+	return config, nil
 }
