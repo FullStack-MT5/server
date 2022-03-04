@@ -5,6 +5,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -23,7 +24,7 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	go shutdown.ListenInterrupt(cancel)
 
-	shutdownHandle, err := run(ctx)
+	shutdownHandle, err := run(ctx, cancel)
 	if err != nil {
 		shutdownHandle.Call() // nolint
 		fmt.Fprintln(os.Stderr, err)
@@ -39,7 +40,13 @@ func main() {
 	}
 }
 
-func run(ctx context.Context) (*shutdown.Handle, error) {
+// run executes the main program. It starts a server.Server inside
+// a goroutine and returns a configured shutdown.Handle for gracefully
+// shutting down the program.
+//
+// If the bootstrap of the server fails, run returns a non-nil error.
+// Otherwise the caller must use the shutdown.Handle to stop the server.
+func run(ctx context.Context, cancel context.CancelFunc) (*shutdown.Handle, error) {
 	configPath := flag.String("config", defaultConfigPath, "")
 
 	flag.Parse()
@@ -57,7 +64,7 @@ func run(ctx context.Context) (*shutdown.Handle, error) {
 	srv := server.New(config.addr, rs)
 
 	handle := shutdown.NewHandle(func() error {
-		if err := srv.Shutdown(ctx); err != nil {
+		if err := srv.Shutdown(ctx); err != nil && err != context.Canceled {
 			return err
 		}
 
@@ -68,7 +75,14 @@ func run(ctx context.Context) (*shutdown.Handle, error) {
 		return nil
 	})
 
-	return handle, srv.Start()
+	go func() {
+		if err := srv.Start(); err != nil && err != http.ErrServerClosed {
+			fmt.Fprintln(os.Stderr, err)
+			cancel()
+		}
+	}()
+
+	return handle, nil
 }
 
 type config struct {
