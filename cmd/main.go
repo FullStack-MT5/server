@@ -47,7 +47,7 @@ func main() {
 // If the bootstrap of the server fails, run returns a non-nil error.
 // Otherwise the caller must use the shutdown.Handle to stop the server.
 func run(ctx context.Context, cancel context.CancelFunc) (*shutdown.Handle, error) {
-	configPath := flag.String("config", defaultConfigPath, "")
+	configPath := flag.String("config", defaultConfigPath, "Path to the configuration file (for example --config .env)")
 
 	flag.Parse()
 
