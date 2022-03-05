@@ -13,56 +13,56 @@ type Report struct {
 	Benchmark struct {
 		// Record represents the summary of a HTTP response.
 		Records []struct {
-			Time  time.Duration `firestore:"time"`
-			Code  int           `firestore:"code"`
-			Bytes int           `firestore:"bytes"`
-			Error string        `firestore:"error,omitempty"`
+			Time  time.Duration `firestore:"time" json:"time"`
+			Code  int           `firestore:"code" json:"code"`
+			Bytes int           `firestore:"bytes" json:"bytes"`
+			Error string        `firestore:"error,omitempty" json:"error,omitempty"`
 
 			// Event is a stage of an outgoing HTTP request associated with a timestamp.
 			Events []struct {
-				Name string        `firestore:"name"`
-				Time time.Duration `firestore:"time"`
-			} `firestore:"events"`
-		} `firestore:"records"`
+				Name string        `firestore:"name" json:"name"`
+				Time time.Duration `firestore:"time" json:"time"`
+			} `firestore:"events" json:"events"`
+		} `firestore:"records" json:"records"`
 
-		Length   int           `firestore:"length"`
-		Success  int           `firestore:"success"`
-		Fail     int           `firestore:"fail"`
-		Duration time.Duration `firestore:"duration"`
-	} `firestore:"benchmark"`
+		Length   int           `firestore:"length" json:"length"`
+		Success  int           `firestore:"success" json:"success"`
+		Fail     int           `firestore:"fail" json:"fail"`
+		Duration time.Duration `firestore:"duration" json:"duration"`
+	} `firestore:"benchmark" json:"benchmark"`
 
 	Metadata struct {
 		// Config represents the global configuration of the runner.
 		Config struct {
 			// Request contains the confing options relative to a single request.
 			Request struct {
-				Method string      `firestore:"method"`
-				URL    *url.URL    `firestore:"url"`
-				Header http.Header `firestore:"header"`
+				Method string      `firestore:"method" json:"method"`
+				URL    *url.URL    `firestore:"url" json:"url"`
+				Header http.Header `firestore:"header" json:"header"`
 
 				Body struct {
-					Type    string `firestore:"type"`
-					Content []byte `firestore:"content"`
-				} `firestore:"body"`
-			} `firestore:"request"`
+					Type    string `firestore:"type" json:"type"`
+					Content []byte `firestore:"content" json:"content"`
+				} `firestore:"body" json:"body"`
+			} `firestore:"request" json:"request"`
 
 			// Runner contains options relative to the runner.
 			Runner struct {
-				Requests       int           `firestore:"requests"`
-				Concurrency    int           `firestore:"concurrency"`
-				Interval       time.Duration `firestore:"interval"`
-				RequestTimeout time.Duration `firestore:"requestTimeout"`
-				GlobalTimeout  time.Duration `firestore:"globalTimeout"`
-			} `firestore:"runner"`
+				Requests       int           `firestore:"requests" json:"requests"`
+				Concurrency    int           `firestore:"concurrency" json:"concurrency"`
+				Interval       time.Duration `firestore:"interval" json:"interval"`
+				RequestTimeout time.Duration `firestore:"requestTimeout" json:"requestTimeout"`
+				GlobalTimeout  time.Duration `firestore:"globalTimeout" json:"globalTimeout"`
+			} `firestore:"runner" json:"runner"`
 
 			// Output contains options relative to the output.
 			Output struct {
 				Out      []string
 				Silent   bool
 				Template string
-			} `firestore:"-"`
-		} `firestore:"config"`
+			} `firestore:"-" json:"-"`
+		} `firestore:"config" json:"config"`
 
-		FinishedAt time.Time `firestore:"finishedAt"`
-	} `firestore:"metadata"`
+		FinishedAt time.Time `firestore:"finishedAt" json:"finishedAt"`
+	} `firestore:"metadata" json:"metadata"`
 }
