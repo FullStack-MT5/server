@@ -12,3 +12,9 @@ type ReportService interface {
 	// Retrieve retrieves a Report by ID from the data layer.
 	Retrieve(ctx context.Context, id string) (Report, error)
 }
+
+type BenchmarkService interface {
+	Close()
+	ListMetadataByUserID(id int) ([]*Metadata, error)
+	FindBenchmarkDetailByID(id int) (*Benchmark, error)
+}
