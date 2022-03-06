@@ -6,10 +6,11 @@ import (
 	"fmt"
 	"os"
 
-	_ "github.com/GoogleCloudPlatform/cloudsql-proxy/proxy/dialers/postgres"
-	"github.com/benchttp/server/benchttp"
+	_ "github.com/GoogleCloudPlatform/cloudsql-proxy/proxy/dialers/postgres" // blank import
 	"github.com/joho/godotenv"
 	"github.com/lib/pq"
+
+	"github.com/benchttp/server/benchttp"
 )
 
 ////////////////////////////////////////////////// benchmarkService //////////////////////////////////////////////////
@@ -103,9 +104,6 @@ func getConnectionInfoFromEnvVariables() (connectionInfo, error) {
 func (b *benchmarkService) ListMetadataByUserID(userID int) ([]*benchttp.Metadata, error) {
 	metadataList := make([]*benchttp.Metadata, 0)
 
-	// ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	// defer cancel()
-
 	stmt, err := b.db.Prepare("SELECT tag, finished_at FROM metadata WHERE user_id = $1 ORDER BY finished_at DESC")
 	if err != nil {
 		return []*benchttp.Metadata{}, ErrPreparingStmt
@@ -128,8 +126,8 @@ func (b *benchmarkService) ListMetadataByUserID(userID int) ([]*benchttp.Metadat
 			return nil, err
 		}
 		metadataList = append(metadataList, metadata)
-
 	}
+
 	return metadataList, nil
 }
 
