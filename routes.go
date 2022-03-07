@@ -41,7 +41,7 @@ func (s *Server) registerRoutes() {
 
 	v1.HandleFunc("/reports/"+idPathVar, s.retrieveReport).Methods("GET")
 
-	v1.HandleFunc("/benchmarks-list/"+idPathVar, s.ListMetadataByUserID).Methods("GET")
+	v1.HandleFunc("/benchmarks-list/", s.ListMetadataByUserID).Methods("GET")
 
 	v1.HandleFunc("/benchmark/"+idPathVar, s.FindBenchmarkDetailByID).Methods("GET")
 }
