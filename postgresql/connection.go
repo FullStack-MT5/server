@@ -8,18 +8,16 @@ import (
 
 	_ "github.com/GoogleCloudPlatform/cloudsql-proxy/proxy/dialers/postgres" // blank import
 	"github.com/joho/godotenv"
-
-	"github.com/benchttp/server/benchttp"
 )
 
 type computedStatsService struct {
 	db *sql.DB
 }
 
-func NewComputedStatsService(idleConn, maxConn int) (benchttp.ComputedStatsService, error) {
+func NewComputedStatsService(idleConn, maxConn int) (computedStatsService, error) {
 	connectionInfo, err := getConnectionInfoFromEnvVariables()
 	if err != nil {
-		return nil, err
+		return computedStatsService{}, err
 	}
 
 	dbURI := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
@@ -30,18 +28,18 @@ func NewComputedStatsService(idleConn, maxConn int) (benchttp.ComputedStatsServi
 
 	db, err := sql.Open("cloudsqlpostgres", dbURI)
 	if err != nil {
-		return nil, ErrDatabaseConnection
+		return computedStatsService{}, ErrDatabaseConnection
 	}
 
 	err = db.Ping()
 	if err != nil {
-		return nil, ErrDatabasePing
+		return computedStatsService{}, ErrDatabasePing
 	}
 
 	db.SetMaxIdleConns(idleConn)
 	db.SetMaxOpenConns(maxConn)
 
-	return &computedStatsService{db}, nil
+	return computedStatsService{db}, nil
 }
 
 func (b *computedStatsService) Close() {

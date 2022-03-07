@@ -21,8 +21,8 @@ type ComputedStatsService interface {
 	Close()
 	// ListMetadataByUserID retrieves all the metadata (Tag and
 	// FInishedAt) related to a User with its user id.
-	ListMetadataByUserID(id int) ([]*Metadata, error)
+	ListMetadataByUserID(id int) ([]Metadata, error)
 	// FindComputedStatsByID retrieves computed stats,
 	// when provided with a metadata id.
-	FindComputedStatsByID(id int) (*ComputedStats, error)
+	FindComputedStatsByID(id int) (ComputedStats, error)
 }

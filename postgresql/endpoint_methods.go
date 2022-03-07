@@ -6,23 +6,23 @@ import (
 	"github.com/benchttp/server/benchttp"
 )
 
-func (c *computedStatsService) ListMetadataByUserID(userID int) ([]*benchttp.Metadata, error) {
-	metadataList := make([]*benchttp.Metadata, 0)
+func (c computedStatsService) ListMetadataByUserID(userID int) ([]benchttp.Metadata, error) {
+	metadataList := []benchttp.Metadata{}
 
 	stmt, err := c.db.Prepare("SELECT tag, finished_at FROM metadata WHERE user_id = $1 ORDER BY finished_at DESC")
 	if err != nil {
-		return []*benchttp.Metadata{}, ErrPreparingStmt
+		return []benchttp.Metadata{}, ErrPreparingStmt
 	}
 	defer stmt.Close()
 
 	rows, err := stmt.Query(userID)
 	if err != nil {
-		return []*benchttp.Metadata{}, ErrExecutingPreparedStmt
+		return []benchttp.Metadata{}, ErrExecutingPreparedStmt
 	}
 	defer rows.Close()
 
 	for rows.Next() {
-		metadata := new(benchttp.Metadata)
+		metadata := benchttp.Metadata{}
 		err = rows.Scan(
 			&metadata.Tag,
 			&metadata.FinishedAt,
