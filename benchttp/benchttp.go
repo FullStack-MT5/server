@@ -79,17 +79,17 @@ type Codestats struct {
 	Code2xx int
 	Code3xx int
 	Code4xx int
+	Code5xx int
 }
 
 // Stats represents the time stats related to a benchmark
 type Timestats struct {
-	Min        float64
-	Max        float64
-	Mean       float64
-	Median     float64
-	Variance   float64
-	Deciles    []float64
-	ObjectType string
+	Min      float64
+	Max      float64
+	Mean     float64
+	Median   float64
+	Variance float64
+	Deciles  []float64
 }
 
 // Benchmark contains Metadata, Codestats and Stats of a given Benchmark

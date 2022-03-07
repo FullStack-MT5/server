@@ -134,7 +134,7 @@ func (b *benchmarkService) ListMetadataByUserID(userID int) ([]*benchttp.Metadat
 func (b *benchmarkService) FindBenchmarkDetailByID(metadataID int) (*benchttp.Benchmark, error) {
 	benchmark := &benchttp.Benchmark{}
 
-	stmt := "SELECT m.tag, m.finished_at, c.code_1xx, c.code_2xx, c.code_3xx, c.code_4xx, t.min, t.max, t.mean, t.median, t.variance, t.deciles " +
+	stmt := "SELECT m.tag, m.finished_at, c.code_1xx, c.code_2xx, c.code_3xx, c.code_4xx, c.code_5xx, t.min, t.max, t.mean, t.median, t.variance, t.deciles " +
 		"FROM public.metadata AS m " +
 		"INNER JOIN public.codestats AS c ON c.metadata_id = m.id " +
 		"INNER JOIN public.timestats AS t ON t.metadata_id = m.id " +
@@ -142,7 +142,7 @@ func (b *benchmarkService) FindBenchmarkDetailByID(metadataID int) (*benchttp.Be
 		"ORDER BY m.finished_at DESC"
 
 	row := b.db.QueryRow(stmt, metadataID)
-	err := row.Scan(&benchmark.Metadata.Tag, &benchmark.Metadata.FinishedAt, &benchmark.Codestats.Code1xx, &benchmark.Codestats.Code2xx, &benchmark.Codestats.Code3xx, &benchmark.Codestats.Code4xx, &benchmark.Timestats.Min, &benchmark.Timestats.Max, &benchmark.Timestats.Mean, &benchmark.Timestats.Median, &benchmark.Timestats.Variance, (*pq.Float64Array)(&benchmark.Timestats.Deciles))
+	err := row.Scan(&benchmark.Metadata.Tag, &benchmark.Metadata.FinishedAt, &benchmark.Codestats.Code1xx, &benchmark.Codestats.Code2xx, &benchmark.Codestats.Code3xx, &benchmark.Codestats.Code4xx, &benchmark.Codestats.Code5xx, &benchmark.Timestats.Min, &benchmark.Timestats.Max, &benchmark.Timestats.Mean, &benchmark.Timestats.Median, &benchmark.Timestats.Variance, (*pq.Float64Array)(&benchmark.Timestats.Deciles))
 	if err != nil {
 		return benchmark, ErrScanningRows
 	}
