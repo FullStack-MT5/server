@@ -6,10 +6,10 @@ import (
 	"github.com/benchttp/server/benchttp"
 )
 
-func (b *computedStatsService) ListMetadataByUserID(userID int) ([]*benchttp.Metadata, error) {
+func (c *computedStatsService) ListMetadataByUserID(userID int) ([]*benchttp.Metadata, error) {
 	metadataList := make([]*benchttp.Metadata, 0)
 
-	stmt, err := b.db.Prepare("SELECT tag, finished_at FROM metadata WHERE user_id = $1 ORDER BY finished_at DESC")
+	stmt, err := c.db.Prepare("SELECT tag, finished_at FROM metadata WHERE user_id = $1 ORDER BY finished_at DESC")
 	if err != nil {
 		return []*benchttp.Metadata{}, ErrPreparingStmt
 	}
@@ -36,7 +36,7 @@ func (b *computedStatsService) ListMetadataByUserID(userID int) ([]*benchttp.Met
 	return metadataList, nil
 }
 
-func (b *computedStatsService) FindComputedStatsByID(metadataID int) (*benchttp.ComputedStats, error) {
+func (c *computedStatsService) FindComputedStatsByID(metadataID int) (*benchttp.ComputedStats, error) {
 	computedStats := &benchttp.ComputedStats{}
 
 	stmt := "SELECT m.tag, m.finished_at, c.code_1xx, c.code_2xx, c.code_3xx, c.code_4xx, c.code_5xx, t.min, t.max, t.mean, t.median, t.variance, t.deciles " +
@@ -46,7 +46,7 @@ func (b *computedStatsService) FindComputedStatsByID(metadataID int) (*benchttp.
 		"WHERE m.id = $1 " +
 		"ORDER BY m.finished_at DESC"
 
-	row := b.db.QueryRow(stmt, metadataID)
+	row := c.db.QueryRow(stmt, metadataID)
 	err := row.Scan(&computedStats.Metadata.Tag, &computedStats.Metadata.FinishedAt, &computedStats.Codestats.Code1xx, &computedStats.Codestats.Code2xx, &computedStats.Codestats.Code3xx, &computedStats.Codestats.Code4xx, &computedStats.Codestats.Code5xx, &computedStats.Timestats.Min, &computedStats.Timestats.Max, &computedStats.Timestats.Mean, &computedStats.Timestats.Median, &computedStats.Timestats.Variance, (*pq.Float64Array)(&computedStats.Timestats.Deciles))
 	if err != nil {
 		return computedStats, ErrScanningRows
