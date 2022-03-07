@@ -13,13 +13,13 @@ import (
 	"github.com/benchttp/server/benchttp"
 )
 
-////////////////////////////////////////////////// benchmarkService //////////////////////////////////////////////////
+////////////////////////////////////////////////// computedStatsService //////////////////////////////////////////////////
 
-type benchmarkService struct {
+type computedStatsService struct {
 	db *sql.DB
 }
 
-func NewBenchmarkService(idleConn, maxConn int) (benchttp.BenchmarkService, error) {
+func NewComputedStatsService(idleConn, maxConn int) (benchttp.ComputedStatsService, error) {
 	connectionInfo, err := getConnectionInfoFromEnvVariables()
 	if err != nil {
 		return nil, err
@@ -44,10 +44,10 @@ func NewBenchmarkService(idleConn, maxConn int) (benchttp.BenchmarkService, erro
 	db.SetMaxIdleConns(idleConn)
 	db.SetMaxOpenConns(maxConn)
 
-	return &benchmarkService{db}, nil
+	return &computedStatsService{db}, nil
 }
 
-func (b *benchmarkService) Close() {
+func (b *computedStatsService) Close() {
 	b.db.Close()
 }
 
@@ -101,7 +101,7 @@ func getConnectionInfoFromEnvVariables() (connectionInfo, error) {
 
 ////////////////////////////////////////////////// GET //////////////////////////////////////////////////
 
-func (b *benchmarkService) ListMetadataByUserID(userID int) ([]*benchttp.Metadata, error) {
+func (b *computedStatsService) ListMetadataByUserID(userID int) ([]*benchttp.Metadata, error) {
 	metadataList := make([]*benchttp.Metadata, 0)
 
 	stmt, err := b.db.Prepare("SELECT tag, finished_at FROM metadata WHERE user_id = $1 ORDER BY finished_at DESC")
@@ -131,8 +131,8 @@ func (b *benchmarkService) ListMetadataByUserID(userID int) ([]*benchttp.Metadat
 	return metadataList, nil
 }
 
-func (b *benchmarkService) FindBenchmarkDetailByID(metadataID int) (*benchttp.Benchmark, error) {
-	benchmark := &benchttp.Benchmark{}
+func (b *computedStatsService) FindComputedStatsByID(metadataID int) (*benchttp.ComputedStats, error) {
+	computedStats := &benchttp.ComputedStats{}
 
 	stmt := "SELECT m.tag, m.finished_at, c.code_1xx, c.code_2xx, c.code_3xx, c.code_4xx, c.code_5xx, t.min, t.max, t.mean, t.median, t.variance, t.deciles " +
 		"FROM public.metadata AS m " +
@@ -142,10 +142,10 @@ func (b *benchmarkService) FindBenchmarkDetailByID(metadataID int) (*benchttp.Be
 		"ORDER BY m.finished_at DESC"
 
 	row := b.db.QueryRow(stmt, metadataID)
-	err := row.Scan(&benchmark.Metadata.Tag, &benchmark.Metadata.FinishedAt, &benchmark.Codestats.Code1xx, &benchmark.Codestats.Code2xx, &benchmark.Codestats.Code3xx, &benchmark.Codestats.Code4xx, &benchmark.Codestats.Code5xx, &benchmark.Timestats.Min, &benchmark.Timestats.Max, &benchmark.Timestats.Mean, &benchmark.Timestats.Median, &benchmark.Timestats.Variance, (*pq.Float64Array)(&benchmark.Timestats.Deciles))
+	err := row.Scan(&computedStats.Metadata.Tag, &computedStats.Metadata.FinishedAt, &computedStats.Codestats.Code1xx, &computedStats.Codestats.Code2xx, &computedStats.Codestats.Code3xx, &computedStats.Codestats.Code4xx, &computedStats.Codestats.Code5xx, &computedStats.Timestats.Min, &computedStats.Timestats.Max, &computedStats.Timestats.Mean, &computedStats.Timestats.Median, &computedStats.Timestats.Variance, (*pq.Float64Array)(&computedStats.Timestats.Deciles))
 	if err != nil {
-		return benchmark, ErrScanningRows
+		return computedStats, ErrScanningRows
 	}
 
-	return benchmark, nil
+	return computedStats, nil
 }

@@ -15,16 +15,16 @@ type Server struct {
 	*http.Server
 	router *mux.Router
 
-	ReportService    benchttp.ReportService
-	BenchmarkService benchttp.BenchmarkService
+	ReportService        benchttp.ReportService
+	ComputedStatsService benchttp.ComputedStatsService
 }
 
 // New returns a Server with specified configuration parameters.
-func New(addr string, rs benchttp.ReportService, bs benchttp.BenchmarkService) *Server {
+func New(addr string, rs benchttp.ReportService, cs benchttp.ComputedStatsService) *Server {
 	return &Server{
-		Server:           &http.Server{Addr: addr},
-		ReportService:    rs,
-		BenchmarkService: bs,
+		Server:               &http.Server{Addr: addr},
+		ReportService:        rs,
+		ComputedStatsService: cs,
 	}
 }
 

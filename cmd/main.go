@@ -40,12 +40,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	bs, err := postgresql.NewBenchmarkService(10, 10)
+	cs, err := postgresql.NewComputedStatsService(10, 10)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	srv := server.New(addr, rs, bs)
+	srv := server.New(addr, rs, cs)
 	if err := srv.Start(); err != nil {
 		log.Fatal(err)
 	}
