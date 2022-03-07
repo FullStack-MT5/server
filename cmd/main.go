@@ -10,6 +10,7 @@ import (
 
 	"github.com/benchttp/server"
 	"github.com/benchttp/server/firestore"
+	"github.com/benchttp/server/postgresql"
 )
 
 const defaultPort = "9998"
@@ -39,7 +40,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	srv := server.New(addr, rs)
+	bs, err := postgresql.NewBenchmarkService(10, 10)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	srv := server.New(addr, rs, bs)
 	if err := srv.Start(); err != nil {
 		log.Fatal(err)
 	}
