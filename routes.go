@@ -11,8 +11,8 @@ type param string
 
 const (
 	// alphanum20 is a regular expression matching an sequence of
-	// 20 alphanumeric characters.
-	alphanum20 = "[a-zA-Z0-9]{2,20}"
+	// 1 to 20 alphanumeric characters.
+	alphanum20 = "[a-zA-Z0-9]{1,20}"
 
 	// idParam is the parameter name for the path variable to identify
 	// one resource of a collection of resources, typically in RESTful
@@ -27,6 +27,7 @@ func pathParam(r *http.Request, p param) (string, error) {
 	if !ok {
 		return "", fmt.Errorf("missing path parameter \"%s\"", p)
 	}
+
 	return v, nil
 }
 
