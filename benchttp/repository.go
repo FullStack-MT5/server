@@ -18,8 +18,8 @@ type ReportService interface {
 type ComputedStatsService interface {
 	// ListMetadataByUserID retrieves all the metadata (Tag and
 	// FInishedAt) related to a User with its user id.
-	ListMetadataByUserID(id int) ([]Metadata, error)
+	ListMetadataByUserID(id string) ([]Metadata, error)
 	// FindComputedStatsByID retrieves computed stats,
 	// when provided with a metadata id.
-	FindComputedStatsByID(id int) (ComputedStats, error)
+	FindComputedStatsByID(id string) (ComputedStats, error)
 }

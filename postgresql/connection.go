@@ -61,22 +61,22 @@ func getConnectionInfoFromEnvVariables() (connectionInfo, error) {
 		appendError(errors.New("could not load '.env' file"))
 	}
 
-	host := os.Getenv("HOST")
+	host := os.Getenv("PSQL_HOST")
 	if host == "" {
 		appendError(errors.New("could not find 'HOST' environment variable"))
 	}
 
-	user := os.Getenv("DB_USER")
+	user := os.Getenv("PSQL_USER")
 	if user == "" {
 		appendError(errors.New("could not find 'DB_USER' environment variable"))
 	}
 
-	password := os.Getenv("DB_PASSWORD")
+	password := os.Getenv("PSQL_PASSWORD")
 	if password == "" {
 		appendError(errors.New("could not find 'DB_PASSWORD' environment variable"))
 	}
 
-	dbName := os.Getenv("DB_NAME")
+	dbName := os.Getenv("PSQL_NAME")
 	if dbName == "" {
 		appendError(errors.New("could not find 'DB_NAME' environment variable"))
 	}

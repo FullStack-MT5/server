@@ -4,6 +4,7 @@ import "time"
 
 // Metadata contains a computed stats group metadata
 type Metadata struct {
+	ID         string    `json:"id"`
 	Tag        string    `json:"tag"`
 	FinishedAt time.Time `json:"finishedAt"`
 }
