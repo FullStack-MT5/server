@@ -7,11 +7,11 @@ import (
 	_ "github.com/GoogleCloudPlatform/cloudsql-proxy/proxy/dialers/postgres" // blank import
 )
 
-type ComputedStatsService struct {
+type StatsService struct {
 	db *sql.DB
 }
 
-func NewComputedStatsService(config Config) (ComputedStatsService, error) {
+func NewStatsService(config Config) (StatsService, error) {
 	dbURI := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
 		config.Host,
 		config.User,
@@ -20,18 +20,18 @@ func NewComputedStatsService(config Config) (ComputedStatsService, error) {
 
 	db, err := sql.Open("cloudsqlpostgres", dbURI)
 	if err != nil {
-		return ComputedStatsService{}, ErrDatabaseConnection
+		return StatsService{}, ErrDatabaseConnection
 	}
 
 	err = db.Ping()
 	if err != nil {
-		return ComputedStatsService{}, ErrDatabasePing
+		return StatsService{}, ErrDatabasePing
 	}
 
 	db.SetMaxIdleConns(config.IdleConn)
 	db.SetMaxOpenConns(config.MaxConn)
 
-	return ComputedStatsService{db}, nil
+	return StatsService{db}, nil
 }
 
 type Config struct {

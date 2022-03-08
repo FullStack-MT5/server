@@ -4,14 +4,15 @@ import (
 	"context"
 	"errors"
 	"flag"
+	"fmt"
 	"log"
 	"os"
 
 	"github.com/joho/godotenv"
 
 	"github.com/benchttp/server"
-	"github.com/benchttp/server/firestore"
-	"github.com/benchttp/server/postgresql"
+	"github.com/benchttp/server/services/firestore"
+	"github.com/benchttp/server/services/postgresql"
 )
 
 const defaultPort = "9998"
@@ -28,8 +29,9 @@ func run() error {
 	addr := ":" + *port
 
 	err := godotenv.Load(".env")
+	// no error returned here because .env is not deployed
 	if err != nil {
-		return errors.New("Error loading .env file")
+		fmt.Println("no .env file found")
 	}
 
 	projectID := os.Getenv("GOOGLE_PROJECT_ID")
@@ -72,11 +74,11 @@ func run() error {
 		return err
 	}
 
-	cs, err := postgresql.NewComputedStatsService(psqlConfig)
+	s, err := postgresql.NewStatsService(psqlConfig)
 	if err != nil {
 		return err
 	}
 
-	srv := server.New(addr, rs, cs)
+	srv := server.New(addr, rs, s)
 	return srv.Start()
 }

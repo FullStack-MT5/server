@@ -13,13 +13,13 @@ type ReportService interface {
 	Retrieve(ctx context.Context, id string) (Report, error)
 }
 
-// ComputedStatsService defines the interface to implement by a
+// StatsService defines the interface to implement by a
 // service facade inside the application.
-type ComputedStatsService interface {
-	// ListMetadataByUserID retrieves all the metadata (Tag and
-	// FInishedAt) related to a User with its user id.
-	ListMetadataByUserID(id string) ([]Metadata, error)
-	// FindComputedStatsByID retrieves computed stats,
-	// when provided with a metadata id.
-	FindComputedStatsByID(id string) (ComputedStats, error)
+type StatsService interface {
+	// ListAvailable retrieves all the StatsDescriptor (Tag and
+	// FinishedAt) concerning the reports of a given user.
+	ListAvailable(id string) ([]StatsDescriptor, error)
+	// GetByID retrieves computed stats,
+	// when provided with a StatsDescriptor id.
+	GetByID(id string) (Stats, error)
 }

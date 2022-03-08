@@ -2,8 +2,8 @@ package benchttp
 
 import "time"
 
-// Metadata contains a computed stats group metadata
-type Metadata struct {
+// StatsDescriptor contains a computed stats group description information
+type StatsDescriptor struct {
 	ID         string    `json:"id"`
 	Tag        string    `json:"tag"`
 	FinishedAt time.Time `json:"finishedAt"`
@@ -28,9 +28,9 @@ type Timestats struct {
 	Deciles  []float64 `json:"deciles"`
 }
 
-// ComputedStats contains Metadata, Codestats and Stats of a given computed stats group
-type ComputedStats struct {
-	Metadata  `json:"metadata"`
-	Codestats `json:"codestats"`
-	Timestats `json:"timestats"`
+// Stats contains StatsDescriptor, Codestats and Stats of a given computed stats group
+type Stats struct {
+	StatsDescriptor `json:"statsDescriptor"`
+	Codestats       `json:"codestats"`
+	Timestats       `json:"timestats"`
 }

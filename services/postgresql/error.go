@@ -21,17 +21,3 @@ var (
 	// returned by a query.
 	ErrScanningRows = errors.New("error trying to scan result rows")
 )
-
-// ErrNotFoundEnvVariables regroups all environment variables not found
-type ErrNotFoundEnvVariables struct {
-	notFoundEnvVariables []error
-}
-
-// ErrNotFoundEnvVariables.Error() lists all environment variables not found
-func (e *ErrNotFoundEnvVariables) Error() string {
-	message := "Environment variables not found:\n"
-	for _, err := range e.notFoundEnvVariables {
-		message += err.Error() + "\n"
-	}
-	return message
-}
