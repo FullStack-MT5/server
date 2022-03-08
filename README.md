@@ -106,7 +106,7 @@ Status: 200 OK
 
 </details>
 
-### List all the available statistics of previously reported runs
+### List all the available statistics of previously reported run
 
 ```txt
 GET /v1/stats
