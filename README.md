@@ -106,6 +106,87 @@ Status: 200 OK
 
 </details>
 
+### List all the available statistics of previously reported runs
+
+```txt
+GET /v1/stats
+```
+
+#### Parameters
+
+None. The list is always limited to the user's runs.
+
+#### Response
+
+```txt
+Status: 200 OK
+```
+
+<details>
+  <summary>JSON response</summary>
+
+```json
+[
+  {
+    "id": "lwkaFmtuCoeKSFhbndTC",
+    "tag": "my-custom-tag",
+    "finishedAt": "2022-02-27T19:54:19.019717Z"
+  },
+  {
+    "id": "XbqWESZWGC9iaXSWPDmu",
+    "tag": "my-other-custom-tag",
+    "finishedAt": "2022-03-03T18:00:19.019717Z"
+  }
+]
+```
+
+</details>
+
+### Get the statistics of a particular run
+
+```txt
+GET /v1/stats/{id}
+```
+
+#### Parameters
+
+| Name | Type   | In   | Description                                    |
+| ---- | ------ | ---- | ---------------------------------------------- |
+| `id` | string | path | The ID of the report whose stats are requested |
+
+#### Response
+
+```txt
+Status: 200 OK
+```
+
+<details>
+  <summary>JSON response</summary>
+
+```json
+{
+  "id": "lwkaFmtuCoeKSFhbndTC",
+  "tag": "my-custom-tag",
+  "finishedAt": "2022-02-27T19:54:19.019717Z",
+  "min": 152005288,
+  "max": 383330299,
+  "mean": 266585242,
+  "median": 266713182,
+  "standardDeviation": 51772085,
+  "deciles": [
+    152005288, 262461226, 263282513, 265239215, 265682968, 267743397, 268441975,
+    268631834, 269033707
+  ],
+  "code1xx": 0,
+  "code2xx": 1000,
+  "code3xx": 0,
+  "code4xx": 0,
+  "code5xx": 0
+}
+```
+
+</details>
+
 ## Deployment
 
 The infrastructure code defining the deployment of `server` is located inside [benchttp/infra](https://github.com/benchttp/infra).
