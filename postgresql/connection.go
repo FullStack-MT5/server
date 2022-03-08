@@ -10,14 +10,14 @@ import (
 	"github.com/joho/godotenv"
 )
 
-type computedStatsService struct {
+type ComputedStatsService struct {
 	db *sql.DB
 }
 
-func NewComputedStatsService(idleConn, maxConn int) (computedStatsService, error) {
+func NewComputedStatsService(idleConn, maxConn int) (ComputedStatsService, error) {
 	connectionInfo, err := getConnectionInfoFromEnvVariables()
 	if err != nil {
-		return computedStatsService{}, err
+		return ComputedStatsService{}, err
 	}
 
 	dbURI := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
@@ -28,18 +28,18 @@ func NewComputedStatsService(idleConn, maxConn int) (computedStatsService, error
 
 	db, err := sql.Open("cloudsqlpostgres", dbURI)
 	if err != nil {
-		return computedStatsService{}, ErrDatabaseConnection
+		return ComputedStatsService{}, ErrDatabaseConnection
 	}
 
 	err = db.Ping()
 	if err != nil {
-		return computedStatsService{}, ErrDatabasePing
+		return ComputedStatsService{}, ErrDatabasePing
 	}
 
 	db.SetMaxIdleConns(idleConn)
 	db.SetMaxOpenConns(maxConn)
 
-	return computedStatsService{db}, nil
+	return ComputedStatsService{db}, nil
 }
 
 type connectionInfo struct {
