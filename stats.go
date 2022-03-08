@@ -4,7 +4,7 @@ import (
 	"net/http"
 )
 
-func (s *Server) ListAvailable(w http.ResponseWriter, r *http.Request) {
+func (s *Server) retrieveAllStats(w http.ResponseWriter, r *http.Request) {
 	// TO DO: get userID from authentication to use it here instead of "1"
 	stats, err := s.StatsService.ListAvailable("1")
 	if err != nil {
@@ -15,7 +15,7 @@ func (s *Server) ListAvailable(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, stats, 200)
 }
 
-func (s *Server) GetByID(w http.ResponseWriter, r *http.Request) {
+func (s *Server) retrieveStatsByID(w http.ResponseWriter, r *http.Request) {
 	id, err := pathParam(r, idParam)
 	if err != nil {
 		writeError(w, ErrBadRequest.Wrap(err))
