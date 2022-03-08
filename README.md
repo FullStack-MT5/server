@@ -129,7 +129,7 @@ make lint
 Run all tests:
 
 ```sh
-make test
+make tests
 # alias to:
 # go test -v -timeout 30s ./...
 ```
@@ -137,7 +137,7 @@ make test
 Run a specific test passing `t` to specify a test and `p` to specify a package (parameters are independent):
 
 ```sh
-make test t=TestCompute p=pkg/golastic
+make test t=TestThing p=internal/thing
 # alias to:
-# go test -v -timeout 30s -run TestCompute ./stats
+# go test -v -timeout 30s -run TestThing ./internal/thing
 ```
