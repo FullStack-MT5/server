@@ -16,9 +16,6 @@ type ReportService interface {
 // ComputedStatsService defines the interface to implement by a
 // service facade inside the application.
 type ComputedStatsService interface {
-	// Close closes the connection to the database storing the
-	// ComputedStats data.
-	Close()
 	// ListMetadataByUserID retrieves all the metadata (Tag and
 	// FInishedAt) related to a User with its user id.
 	ListMetadataByUserID(id int) ([]Metadata, error)

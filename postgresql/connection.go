@@ -42,10 +42,6 @@ func NewComputedStatsService(idleConn, maxConn int) (computedStatsService, error
 	return computedStatsService{db}, nil
 }
 
-func (b *computedStatsService) Close() {
-	b.db.Close()
-}
-
 type connectionInfo struct {
 	host     string
 	user     string
