@@ -18,19 +18,19 @@ type Codestats struct {
 	Code5xx int `json:"code5xx"`
 }
 
-// Stats represents the time stats related to a computed stats group
+// Timestats represents the time stats related to a computed stats group
 type Timestats struct {
-	Min      float64   `json:"min"`
-	Max      float64   `json:"max"`
-	Mean     float64   `json:"mean"`
-	Median   float64   `json:"median"`
-	Variance float64   `json:"average"`
-	Deciles  []float64 `json:"deciles"`
+	Min               float64   `json:"min"`
+	Max               float64   `json:"max"`
+	Mean              float64   `json:"mean"`
+	Median            float64   `json:"median"`
+	StandardDeviation float64   `json:"standardDeviation"`
+	Deciles           []float64 `json:"deciles"`
 }
 
-// Stats contains StatsDescriptor, Codestats and Stats of a given computed stats group
+// Stats contains StatsDescriptor, Codestats and Timestats of a given computed stats group
 type Stats struct {
-	StatsDescriptor `json:"statsDescriptor"`
-	Codestats       `json:"codestats"`
-	Timestats       `json:"timestats"`
+	Descriptor StatsDescriptor `json:"descriptor"`
+	Code       Codestats       `json:"code"`
+	Time       Timestats       `json:"time"`
 }
