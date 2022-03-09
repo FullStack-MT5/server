@@ -168,10 +168,10 @@ Status: 200 OK
   "descriptor": {
     "id": "lwkaFmtuCoeKSFhbndTC",
     "tag": "my-custom-tag",
-    "finishedAt": "2022-02-27T19:54:19.019717Z",
-    "min": 152005288
+    "finishedAt": "2022-02-27T19:54:19.019717Z"
   },
   "time": {
+    "min": 152005288,
     "max": 383330299,
     "mean": 266585242,
     "median": 266713182,
