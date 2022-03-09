@@ -7,7 +7,7 @@ import (
 )
 
 func (s StatsService) ListAvailable(userID string) ([]benchttp.StatsDescriptor, error) {
-	statsDescriptorsList := []benchttp.StatsDescriptor{}
+	list := []benchttp.StatsDescriptor{}
 
 	stmt, err := s.db.Prepare(`SELECT id, tag, finished_at FROM stats_descriptor WHERE user_id = $1 ORDER BY finished_at DESC`)
 	if err != nil {
@@ -31,10 +31,10 @@ func (s StatsService) ListAvailable(userID string) ([]benchttp.StatsDescriptor, 
 		if err != nil {
 			return nil, err
 		}
-		statsDescriptorsList = append(statsDescriptorsList, statsDescriptor)
+		list = append(list, statsDescriptor)
 	}
 
-	return statsDescriptorsList, nil
+	return list, nil
 }
 
 func (s StatsService) GetByID(statsDescriptorID string) (benchttp.Stats, error) {
