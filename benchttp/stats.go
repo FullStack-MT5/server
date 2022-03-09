@@ -20,12 +20,12 @@ type Codestats struct {
 
 // Timestats represents the time stats related to a computed stats group
 type Timestats struct {
-	Min               float64   `json:"min"`
-	Max               float64   `json:"max"`
-	Mean              float64   `json:"mean"`
-	Median            float64   `json:"median"`
-	StandardDeviation float64   `json:"standardDeviation"`
-	Deciles           []float64 `json:"deciles"`
+	Min     float64   `json:"min"`
+	Max     float64   `json:"max"`
+	Mean    float64   `json:"mean"`
+	Median  float64   `json:"median"`
+	StdDev  float64   `json:"standardDeviation"`
+	Deciles []float64 `json:"deciles"`
 }
 
 // Stats contains StatsDescriptor, Codestats and Timestats of a given computed stats group

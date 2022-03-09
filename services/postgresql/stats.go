@@ -76,7 +76,7 @@ ORDER BY s.finished_at DESC`[1:]
 		&stats.Time.Max,
 		&stats.Time.Mean,
 		&stats.Time.Median,
-		&stats.Time.StandardDeviation,
+		&stats.Time.StdDev,
 		(*pq.Float64Array)(&stats.Time.Deciles),
 	)
 	if err != nil {
