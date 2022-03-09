@@ -165,23 +165,29 @@ Status: 200 OK
 
 ```json
 {
-  "id": "lwkaFmtuCoeKSFhbndTC",
-  "tag": "my-custom-tag",
-  "finishedAt": "2022-02-27T19:54:19.019717Z",
-  "min": 152005288,
-  "max": 383330299,
-  "mean": 266585242,
-  "median": 266713182,
-  "standardDeviation": 51772085,
-  "deciles": [
-    152005288, 262461226, 263282513, 265239215, 265682968, 267743397, 268441975,
-    268631834, 269033707
-  ],
-  "code1xx": 0,
-  "code2xx": 1000,
-  "code3xx": 0,
-  "code4xx": 0,
-  "code5xx": 0
+  "descriptor": {
+    "id": "lwkaFmtuCoeKSFhbndTC",
+    "tag": "my-custom-tag",
+    "finishedAt": "2022-02-27T19:54:19.019717Z",
+    "min": 152005288
+  },
+  "time": {
+    "max": 383330299,
+    "mean": 266585242,
+    "median": 266713182,
+    "standardDeviation": 51772085,
+    "deciles": [
+      152005288, 262461226, 263282513, 265239215, 265682968, 267743397,
+      268441975, 268631834, 269033707
+    ]
+  },
+  "code": {
+    "code1xx": 0,
+    "code2xx": 1000,
+    "code3xx": 0,
+    "code4xx": 0,
+    "code5xx": 0
+  }
 }
 ```
 
