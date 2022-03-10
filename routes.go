@@ -42,9 +42,9 @@ func (s *Server) registerRoutes() {
 
 	v1.HandleFunc("/reports/"+idPathVar, s.retrieveReport).Methods("GET")
 
-	v1.HandleFunc("/stats", s.ListAvailable).Methods("GET")
+	v1.HandleFunc("/stats", s.retrieveAllStats).Methods("GET")
 
-	v1.HandleFunc("/stats/"+idPathVar, s.GetByID).Methods("GET")
+	v1.HandleFunc("/stats/"+idPathVar, s.retrieveStatsByID).Methods("GET")
 }
 
 func handleRoot(rw http.ResponseWriter, _ *http.Request) {
