@@ -8,6 +8,7 @@ import (
 
 const (
 	exchangeURL = "https://github.com/login/oauth/access_token"
+	userURL     = "https://api.github.com/user"
 )
 
 type OAuthClient struct {
@@ -56,4 +57,32 @@ func (c OAuthClient) ExchangeForAccessToken(code string) (string, error) {
 	}
 
 	return t.AccessToken, nil
+}
+
+func (c OAuthClient) GetUser(token string) (name, email string, err error) {
+	req, err := http.NewRequest("GET", userURL, nil)
+	if err != nil {
+		return "", "", err
+	}
+
+	req.Header.Set("Authorization", fmt.Sprintf("token %s", token))
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return "", "", fmt.Errorf("error sending request: %w", err)
+	}
+	defer res.Body.Close()
+
+	var u struct {
+		Name  string `json:"name"`
+		Email string `json:"email"`
+		// All the available properties are defined in GitHub docs:
+		// https://docs.github.com/en/rest/reference/users#get-the-authenticated-user
+	}
+
+	if err := json.NewDecoder(res.Body).Decode(&u); err != nil {
+		return "", "", fmt.Errorf("error parsing response: %w", err)
+	}
+
+	return u.Name, u.Email, nil
 }

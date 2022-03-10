@@ -22,7 +22,11 @@ func (s *Server) handleSignin(w http.ResponseWriter, r *http.Request) {
 		writeError(w, ErrBadRequest.Wrap(err))
 	}
 
-	// get user data
+	name, email, err := s.OAuthClient.GetUser(token)
+	if err != nil {
+		writeError(w, ErrInternal.Wrap(err))
+	}
+
 	// if user does not exists -> create new user
 	// sign jwt
 	// send back jwt
