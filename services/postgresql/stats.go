@@ -9,7 +9,7 @@ import (
 func (s StatsService) ListAvailable(userID string) ([]benchttp.StatsDescriptor, error) {
 	list := []benchttp.StatsDescriptor{}
 
-	stmt, err := s.db.Prepare(`SELECT id, tag, finished_at FROM stats_descriptor WHERE user_id = $1 ORDER BY finished_at DESC`)
+	stmt, err := s.db.Prepare(`SELECT id, finished_at FROM stats_descriptor WHERE user_id = $1 ORDER BY finished_at DESC`)
 	if err != nil {
 		return []benchttp.StatsDescriptor{}, ErrPreparingStmt
 	}
@@ -25,7 +25,6 @@ func (s StatsService) ListAvailable(userID string) ([]benchttp.StatsDescriptor, 
 		statsDescriptor := benchttp.StatsDescriptor{}
 		err = rows.Scan(
 			&statsDescriptor.ID,
-			&statsDescriptor.Tag,
 			&statsDescriptor.FinishedAt,
 		)
 		if err != nil {
@@ -43,7 +42,6 @@ func (s StatsService) GetByID(statsDescriptorID string) (benchttp.Stats, error) 
 	stmt := `
 SELECT
 	s.id,
-	s.tag,
 	s.finished_at,
 	c.code_1xx,
 	c.code_2xx,
@@ -54,7 +52,7 @@ SELECT
 	t.max,
 	t.mean,
 	t.median,
-	t.variance,
+	t.standard_deviation,
 	t.deciles
 FROM public.stats_descriptor AS s
 INNER JOIN public.codestats AS c ON c.stats_descriptor_id = s.id
@@ -65,7 +63,6 @@ ORDER BY s.finished_at DESC`[1:]
 	row := s.db.QueryRow(stmt, statsDescriptorID)
 	err := row.Scan(
 		&stats.Descriptor.ID,
-		&stats.Descriptor.Tag,
 		&stats.Descriptor.FinishedAt,
 		&stats.Code.Code1xx,
 		&stats.Code.Code2xx,
