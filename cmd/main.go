@@ -12,6 +12,7 @@ import (
 
 	"github.com/benchttp/server"
 	"github.com/benchttp/server/services/firestore"
+	"github.com/benchttp/server/services/github"
 	"github.com/benchttp/server/services/postgresql"
 )
 
@@ -74,11 +75,13 @@ func run() error {
 		return err
 	}
 
-	s, err := postgresql.NewStatsService(psqlConfig)
+	ss, err := postgresql.NewStatsService(psqlConfig)
 	if err != nil {
 		return err
 	}
 
-	srv := server.New(addr, rs, s)
+	oc := github.NewOauth("1234", "hi mom")
+
+	srv := server.New(addr, rs, ss, oc)
 	return srv.Start()
 }
