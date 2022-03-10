@@ -46,7 +46,9 @@ func (c OAuthClient) ExchangeForAccessToken(code string) (string, error) {
 	}
 	defer res.Body.Close()
 
-	// TODO handle 403?
+	if res.StatusCode != 200 {
+		return "", fmt.Errorf("unexpected status: %s: %w", res.Status, err)
+	}
 
 	var t struct {
 		AccessToken string `json:"access_token"`
@@ -72,6 +74,10 @@ func (c OAuthClient) GetUser(token string) (name, email string, err error) {
 		return "", "", fmt.Errorf("error sending request: %w", err)
 	}
 	defer res.Body.Close()
+
+	if res.StatusCode != 200 {
+		return "", "", fmt.Errorf("unexpected status: %s: %w", res.Status, err)
+	}
 
 	var u struct {
 		Name  string `json:"name"`
