@@ -47,8 +47,8 @@ func (s *Server) registerRoutes() {
 	v1.HandleFunc("/stats/"+idPathVar, s.retrieveStatsByID).Methods("GET")
 }
 
-func handleRoot(rw http.ResponseWriter, _ *http.Request) {
-	rw.Header().Set("Content-Type", "text/html; charset=utf-8")
-	rw.WriteHeader(200)
-	rw.Write([]byte("⚡")) //nolint
+func handleRoot(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(200)
+	w.Write([]byte("⚡")) //nolint
 }
