@@ -11,6 +11,8 @@ import (
 	"github.com/benchttp/server/httplog"
 )
 
+const maxBytesRead = 1 << 20 // 1 MiB
+
 type Server struct {
 	*http.Server
 	router *mux.Router
@@ -40,6 +42,7 @@ func (s *Server) init() {
 	s.router = mux.NewRouter().StrictSlash(true)
 
 	s.router.Use(httplog.Request)
+	s.router.Use(LimitBytesReader(maxBytesRead))
 
 	s.registerRoutes()
 
@@ -48,4 +51,13 @@ func (s *Server) init() {
 
 func (s *Server) localAddr() string {
 	return fmt.Sprintf("http://localhost%s", s.Addr)
+}
+
+func LimitBytesReader(size int64) func(http.Handler) http.Handler {
+	return func(h http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			r.Body = http.MaxBytesReader(w, r.Body, size)
+			h.ServeHTTP(w, r)
+		})
+	}
 }
