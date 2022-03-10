@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"errors"
-	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -24,9 +23,10 @@ func main() {
 }
 
 func run() error {
-	port := flag.String("port", defaultPort, "Address for the server to listen on.")
-	flag.Parse()
-	addr := ":" + *port
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = defaultPort
+	}
 
 	err := godotenv.Load(".env")
 	// no error returned here because .env is not deployed
@@ -79,6 +79,6 @@ func run() error {
 		return err
 	}
 
-	srv := server.New(addr, rs, s)
+	srv := server.New(port, rs, s)
 	return srv.Start()
 }
