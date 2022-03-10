@@ -9,6 +9,7 @@ import (
 
 	"github.com/benchttp/server/benchttp"
 	"github.com/benchttp/server/httplog"
+	"github.com/benchttp/server/services/github"
 )
 
 const maxBytesRead = 1 << 20 // 1 MiB
@@ -19,14 +20,20 @@ type Server struct {
 
 	ReportService benchttp.ReportService
 	StatsService  benchttp.StatsService
+	OAuthClient   github.OAuthClient
 }
 
 // New returns a Server with specified configuration parameters.
-func New(addr string, rs benchttp.ReportService, s benchttp.StatsService) *Server {
+func New(addr string,
+	rs benchttp.ReportService, ss benchttp.StatsService,
+	oauthClient github.OAuthClient,
+) *Server {
+	//
 	return &Server{
 		Server:        &http.Server{Addr: addr},
 		ReportService: rs,
-		StatsService:  s,
+		StatsService:  ss,
+		OAuthClient:   oauthClient,
 	}
 }
 

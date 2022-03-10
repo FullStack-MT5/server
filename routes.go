@@ -45,6 +45,8 @@ func (s *Server) registerRoutes() {
 	v1.HandleFunc("/stats", s.retrieveAllStats).Methods("GET")
 
 	v1.HandleFunc("/stats/"+idPathVar, s.retrieveStatsByID).Methods("GET")
+
+	v1.HandleFunc("/signin", s.handleSignin).Methods("POST")
 }
 
 func handleRoot(w http.ResponseWriter, _ *http.Request) {
