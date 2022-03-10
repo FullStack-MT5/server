@@ -42,12 +42,12 @@ func (c OAuthClient) ExchangeForAccessToken(code string) (string, error) {
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return "", fmt.Errorf("error sending request: %w", err)
+		return "", fmt.Errorf("%w: %s", errRequest, err)
 	}
 	defer res.Body.Close()
 
 	if res.StatusCode != 200 {
-		return "", fmt.Errorf("unexpected status: %s: %w", res.Status, err)
+		return "", fmt.Errorf("%w: %s: %s", errStatusCode, res.Status, err)
 	}
 
 	var t struct {
@@ -55,7 +55,7 @@ func (c OAuthClient) ExchangeForAccessToken(code string) (string, error) {
 	}
 
 	if err := json.NewDecoder(res.Body).Decode(&t); err != nil {
-		return "", fmt.Errorf("error parsing response: %w", err)
+		return "", fmt.Errorf("%s: %s", errParse, err)
 	}
 
 	return t.AccessToken, nil
@@ -71,12 +71,12 @@ func (c OAuthClient) GetUser(token string) (name, email string, err error) {
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return "", "", fmt.Errorf("error sending request: %w", err)
+		return "", "", fmt.Errorf("%w: %s", errRequest, err)
 	}
 	defer res.Body.Close()
 
 	if res.StatusCode != 200 {
-		return "", "", fmt.Errorf("unexpected status: %s: %w", res.Status, err)
+		return "", "", fmt.Errorf("%w: %s: %s", errStatusCode, res.Status, err)
 	}
 
 	var u struct {
@@ -87,7 +87,7 @@ func (c OAuthClient) GetUser(token string) (name, email string, err error) {
 	}
 
 	if err := json.NewDecoder(res.Body).Decode(&u); err != nil {
-		return "", "", fmt.Errorf("error parsing response: %w", err)
+		return "", "", fmt.Errorf("%s: %s", errParse, err)
 	}
 
 	return u.Name, u.Email, nil

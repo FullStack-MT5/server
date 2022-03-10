@@ -19,12 +19,12 @@ func (s *Server) handleSignin(w http.ResponseWriter, r *http.Request) {
 
 	token, err := s.OAuthClient.ExchangeForAccessToken(body.Code)
 	if err != nil {
-		writeError(w, ErrBadRequest.Wrap(err))
+		writeError(w, &ErrBadRequest)
 	}
 
 	name, email, err := s.OAuthClient.GetUser(token)
 	if err != nil {
-		writeError(w, ErrInternal.Wrap(err))
+		writeError(w, &ErrInternal)
 	}
 
 	// if user does not exists -> create new user
