@@ -35,7 +35,7 @@ func (s *Server) handleSignin(w http.ResponseWriter, r *http.Request) {
 
 	user := benchttp.User{}
 
-	switch s.UserService.Exists(name, email) {
+	switch s.UserService.Exists(email) {
 	case true:
 		user, err = s.UserService.GetByCred(name, email)
 	default:

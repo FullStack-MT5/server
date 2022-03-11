@@ -36,7 +36,7 @@ type UserService interface {
 	// the data layer.
 	GetByCred(name, email string) (User, error)
 
-	// Exists returns true if a user with name ane email
-	// already exists in the data layer.
-	Exists(name, email string) bool
+	// Exists returns true if a user with email already exists
+	// in the data layer. By spec, a user email is unique.
+	Exists(email string) bool
 }

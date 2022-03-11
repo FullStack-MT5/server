@@ -29,6 +29,6 @@ func (s UserService) GetByCred(name, email string) (benchttp.User, error) {
 	return benchttp.User{}, nil
 }
 
-func (s UserService) Exists(name, email string) bool {
+func (s UserService) Exists(email string) bool {
 	return false
 }
