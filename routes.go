@@ -40,15 +40,15 @@ func (s *Server) registerRoutes() {
 
 	// Auth
 	v1.HandleFunc("/signin", s.handleSignin).Methods("POST")
-	v1.HandleFunc("/token", mustAuth(s.handleCreateAccessToken)).Methods("GET")
+	v1.HandleFunc("/token", s.mustAuth(s.handleCreateAccessToken)).Methods("GET")
 
 	// Reports
-	v1.HandleFunc("/reports", mustAuth(s.createReport)).Methods("POST")
-	v1.HandleFunc("/reports/"+idPathVar, mustAuth(s.retrieveReport)).Methods("GET")
+	v1.HandleFunc("/reports", s.mustAuth(s.createReport)).Methods("POST")
+	v1.HandleFunc("/reports/"+idPathVar, s.mustAuth(s.retrieveReport)).Methods("GET")
 
 	// Stats
-	v1.HandleFunc("/stats", mustAuth(s.retrieveAllStats)).Methods("GET")
-	v1.HandleFunc("/stats/"+idPathVar, mustAuth(s.retrieveStatsByID)).Methods("GET")
+	v1.HandleFunc("/stats", s.mustAuth(s.retrieveAllStats)).Methods("GET")
+	v1.HandleFunc("/stats/"+idPathVar, s.mustAuth(s.retrieveStatsByID)).Methods("GET")
 }
 
 func handleRoot(w http.ResponseWriter, _ *http.Request) {

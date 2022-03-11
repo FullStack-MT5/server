@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/benchttp/server/benchttp"
 	"github.com/benchttp/server/jwt"
 )
 
@@ -32,17 +33,29 @@ func (s *Server) handleSignin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// if user does not exists -> create new user
+	user := benchttp.User{}
+
+	switch s.UserService.Exists(name, email) {
+	case true:
+		user, err = s.UserService.GetByCred(name, email)
+	default:
+		user, err = s.UserService.Create(name, email)
+	}
+
+	if err != nil {
+		writeError(w, &ErrUnauthorized)
+		return
+	}
 
 	// webToken authenticates the user from the webapp.
-	webToken, err := createToken(name, email)
+	webToken, err := createToken(user.Name, user.Email)
 	if err != nil {
 		writeError(w, &ErrInternal)
 		return
 	}
 
 	// accessToken authenticates the user from the runner.
-	accessToken, err := createToken(name, email)
+	accessToken, err := createToken(user.Name, user.Email)
 	if err != nil {
 		writeError(w, &ErrInternal)
 		return
@@ -58,10 +71,13 @@ func (s *Server) handleSignin(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handleCreateAccessToken(w http.ResponseWriter, r *http.Request) {
-	// TODO
-	name, email := "marcel patulacci", "marcelpatulacci@policenationale.fr"
+	user := userFromContext(r.Context())
+	if user == nil {
+		writeError(w, &ErrInternal)
+		return
+	}
 
-	accessToken, err := createToken(name, email)
+	accessToken, err := createToken(user.Name, user.Email)
 	if err != nil {
 		writeError(w, &ErrInternal)
 		return
