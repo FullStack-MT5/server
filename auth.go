@@ -23,11 +23,13 @@ func (s *Server) handleSignin(w http.ResponseWriter, r *http.Request) {
 	ghToken, err := s.OAuthClient.ExchangeForAccessToken(body.Code)
 	if err != nil {
 		writeError(w, &ErrBadRequest)
+		return
 	}
 
 	name, email, err := s.OAuthClient.GetUser(ghToken)
 	if err != nil {
 		writeError(w, &ErrInternal)
+		return
 	}
 
 	// if user does not exists -> create new user
@@ -36,12 +38,14 @@ func (s *Server) handleSignin(w http.ResponseWriter, r *http.Request) {
 	webToken, err := createToken(name, email)
 	if err != nil {
 		writeError(w, &ErrInternal)
+		return
 	}
 
 	// accessToken authenticates the user from the runner.
 	accessToken, err := createToken(name, email)
 	if err != nil {
 		writeError(w, &ErrInternal)
+		return
 	}
 
 	writeJSON(w, struct {
@@ -60,6 +64,7 @@ func (s *Server) handleCreateAccessToken(w http.ResponseWriter, r *http.Request)
 	accessToken, err := createToken(name, email)
 	if err != nil {
 		writeError(w, &ErrInternal)
+		return
 	}
 
 	writeJSON(w, struct {
