@@ -7,11 +7,24 @@ import (
 	_ "github.com/GoogleCloudPlatform/cloudsql-proxy/proxy/dialers/postgres" // blank import
 )
 
-type StatsService struct {
+type Config struct {
+	Host     string
+	User     string
+	Password string
+	DBName   string
+	IdleConn int
+	MaxConn  int
+}
+
+// Connection holds the connection to a PostgreSQL database.
+// It must be passed to a service constructor.
+type Connection struct {
 	db *sql.DB
 }
 
-func NewStatsService(config Config) (StatsService, error) {
+// Connect opens a connection with a PostgreSQL database and
+// returns a Connection to utilize it.
+func Connect(config Config) (Connection, error) {
 	dbURI := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
 		config.Host,
 		config.User,
@@ -20,25 +33,16 @@ func NewStatsService(config Config) (StatsService, error) {
 
 	db, err := sql.Open("cloudsqlpostgres", dbURI)
 	if err != nil {
-		return StatsService{}, ErrDatabaseConnection
+		return Connection{}, ErrDatabaseConnection
 	}
 
 	err = db.Ping()
 	if err != nil {
-		return StatsService{}, ErrDatabasePing
+		return Connection{}, ErrDatabasePing
 	}
 
 	db.SetMaxIdleConns(config.IdleConn)
 	db.SetMaxOpenConns(config.MaxConn)
 
-	return StatsService{db}, nil
-}
-
-type Config struct {
-	Host     string
-	User     string
-	Password string
-	DBName   string
-	IdleConn int
-	MaxConn  int
+	return Connection{db}, nil
 }

@@ -38,17 +38,24 @@ func (s *Server) registerRoutes() {
 
 	v1 := s.router.PathPrefix("/v1").Subrouter()
 
-	v1.HandleFunc("/reports", s.createReport).Methods("POST")
+	// Auth
+	v1.HandleFunc("/signin", s.handleSignin).Methods("POST")
+	v1.HandleFunc("/token", s.mustAuth(s.handleCreateAccessToken)).Methods("GET")
 
-	v1.HandleFunc("/reports/"+idPathVar, s.retrieveReport).Methods("GET")
+	// Users
+	v1.HandleFunc("/user", s.mustAuth(s.selfUser)).Methods("GET")
 
-	v1.HandleFunc("/stats", s.retrieveAllStats).Methods("GET")
+	// Reports
+	v1.HandleFunc("/reports", s.mustAuth(s.createReport)).Methods("POST")
+	v1.HandleFunc("/reports/"+idPathVar, s.mustAuth(s.retrieveReport)).Methods("GET")
 
-	v1.HandleFunc("/stats/"+idPathVar, s.retrieveStatsByID).Methods("GET")
+	// Stats
+	v1.HandleFunc("/stats", s.mustAuth(s.retrieveAllStats)).Methods("GET")
+	v1.HandleFunc("/stats/"+idPathVar, s.mustAuth(s.retrieveStatsByID)).Methods("GET")
 }
 
-func handleRoot(rw http.ResponseWriter, _ *http.Request) {
-	rw.Header().Set("Content-Type", "text/html; charset=utf-8")
-	rw.WriteHeader(200)
-	rw.Write([]byte("⚡")) //nolint
+func handleRoot(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.WriteHeader(200)
+	w.Write([]byte("⚡")) //nolint
 }

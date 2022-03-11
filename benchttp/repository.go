@@ -23,3 +23,17 @@ type StatsService interface {
 	// when provided with a StatsDescriptor id.
 	GetByID(id string) (Stats, error)
 }
+
+type UserService interface {
+	// Create creates and stores a User in the data layer
+	// and returns its ID.
+	Create(name, email string) (User, error)
+
+	// GetByEmail retrieves a User by their email from
+	// the data layer.
+	GetByEmail(email string) (User, error)
+
+	// Exists returns true if a user with email already exists
+	// in the data layer. By spec, a user email is unique.
+	Exists(email string) bool
+}

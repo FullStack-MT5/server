@@ -20,4 +20,7 @@ var (
 	// ErrScanningRows is returned when server fails to scan the rows
 	// returned by a query.
 	ErrScanningRows = errors.New("error trying to scan result rows")
+	// ErrGettingIDInsertion is returned when server fails to get the ID
+	// of an object that has just been inserted into the database.
+	ErrGettingIDInsertion = errors.New("error retrieving ID of the row inserted")
 )

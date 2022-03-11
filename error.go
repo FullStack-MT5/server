@@ -19,6 +19,10 @@ var (
 		Code:    http.StatusInternalServerError,
 		Message: http.StatusText(http.StatusInternalServerError),
 	}
+	ErrUnauthorized = httpError{
+		Code:    http.StatusUnauthorized,
+		Message: http.StatusText(http.StatusUnauthorized),
+	}
 )
 
 type httpError struct {
