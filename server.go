@@ -22,9 +22,9 @@ type Server struct {
 }
 
 // New returns a Server with specified configuration parameters.
-func New(addr string, rs benchttp.ReportService, s benchttp.StatsService) *Server {
+func New(port string, rs benchttp.ReportService, s benchttp.StatsService) *Server {
 	return &Server{
-		Server:        &http.Server{Addr: addr},
+		Server:        &http.Server{Addr: ":" + port},
 		ReportService: rs,
 		StatsService:  s,
 	}
