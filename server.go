@@ -20,12 +20,14 @@ type Server struct {
 
 	ReportService benchttp.ReportService
 	StatsService  benchttp.StatsService
-	OAuthClient   github.OAuthClient
+	UserService   benchttp.UserService
+
+	OAuthClient github.OAuthClient
 }
 
 // New returns a Server with specified configuration parameters.
 func New(addr string,
-	rs benchttp.ReportService, ss benchttp.StatsService,
+	rs benchttp.ReportService, ss benchttp.StatsService, us benchttp.UserService,
 	oauthClient github.OAuthClient,
 ) *Server {
 	//
@@ -33,6 +35,7 @@ func New(addr string,
 		Server:        &http.Server{Addr: addr},
 		ReportService: rs,
 		StatsService:  ss,
+		UserService:   us,
 		OAuthClient:   oauthClient,
 	}
 }

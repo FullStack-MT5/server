@@ -1,10 +1,23 @@
 package postgresql
 
 import (
+	"database/sql"
+
 	"github.com/lib/pq"
 
 	"github.com/benchttp/server/benchttp"
 )
+
+// Ensure service implements interface.
+var _ benchttp.StatsService = (*StatsService)(nil)
+
+type StatsService struct {
+	db *sql.DB
+}
+
+func NewStatsService(conn Connection) StatsService {
+	return StatsService{conn.db}
+}
 
 func (s StatsService) ListAvailable(userID string) ([]benchttp.StatsDescriptor, error) {
 	list := []benchttp.StatsDescriptor{}

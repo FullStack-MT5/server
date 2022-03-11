@@ -75,13 +75,17 @@ func run() error {
 		return err
 	}
 
-	ss, err := postgresql.NewStatsService(psqlConfig)
+	dbConn, err := postgresql.Connect(psqlConfig)
 	if err != nil {
 		return err
 	}
 
+	ss := postgresql.NewStatsService(dbConn)
+
+	us := postgresql.NewUserService(dbConn)
+
 	oc := github.NewOauth("1234", "hi mom")
 
-	srv := server.New(addr, rs, ss, oc)
+	srv := server.New(addr, rs, ss, us, oc)
 	return srv.Start()
 }
