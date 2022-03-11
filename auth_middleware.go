@@ -41,7 +41,7 @@ func (s *Server) mustAuth(hf http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		user, err := s.UserService.GetByCred(claims.Name, claims.Email)
+		user, err := s.UserService.GetByEmail(claims.Email)
 		if err != nil {
 			writeError(w, &ErrUnauthorized)
 			return

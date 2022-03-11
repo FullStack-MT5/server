@@ -29,12 +29,9 @@ type UserService interface {
 	// and returns its ID.
 	Create(name, email string) (User, error)
 
-	// GetByID retrieves a User by ID from the data layer.
-	GetByID(id string) (User, error)
-
-	// GetByCred retrieves a User by their credentials from
+	// GetByEmail retrieves a User by their email from
 	// the data layer.
-	GetByCred(name, email string) (User, error)
+	GetByEmail(email string) (User, error)
 
 	// Exists returns true if a user with email already exists
 	// in the data layer. By spec, a user email is unique.

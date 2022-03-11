@@ -37,7 +37,7 @@ func (s *Server) handleSignin(w http.ResponseWriter, r *http.Request) {
 
 	switch s.UserService.Exists(email) {
 	case true:
-		user, err = s.UserService.GetByCred(name, email)
+		user, err = s.UserService.GetByEmail(email)
 	default:
 		user, err = s.UserService.Create(name, email)
 	}
