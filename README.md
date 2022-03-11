@@ -129,12 +129,10 @@ Status: 200 OK
 [
   {
     "id": "lwkaFmtuCoeKSFhbndTC",
-    "tag": "my-custom-tag",
     "finishedAt": "2022-02-27T19:54:19.019717Z"
   },
   {
     "id": "XbqWESZWGC9iaXSWPDmu",
-    "tag": "my-other-custom-tag",
     "finishedAt": "2022-03-03T18:00:19.019717Z"
   }
 ]
@@ -167,7 +165,6 @@ Status: 200 OK
 {
   "descriptor": {
     "id": "lwkaFmtuCoeKSFhbndTC",
-    "tag": "my-custom-tag",
     "finishedAt": "2022-02-27T19:54:19.019717Z"
   },
   "time": {
