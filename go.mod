@@ -10,5 +10,6 @@ require (
 
 require (
 	github.com/GoogleCloudPlatform/cloudsql-proxy v1.29.0
+	github.com/google/uuid v1.3.0
 	github.com/lib/pq v1.10.4
 )

@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"cloud.google.com/go/firestore"
+	"github.com/google/uuid"
 
 	"github.com/benchttp/server/benchttp"
 )
@@ -47,12 +48,25 @@ func (s ReportService) collection() *firestore.CollectionRef {
 // Create creates a new document from data inside Firestore.
 // Returns an error if the document could not be created.
 func (s ReportService) Create(ctx context.Context, data benchttp.Report) (string, error) {
-	ref, _, err := s.collection().Add(ctx, data)
+	id, err := uuid.NewRandom()
 	if err != nil {
 		return "", fmt.Errorf("failed to create Firestore document: %w", err)
 	}
 
-	return ref.ID, nil
+	doc := struct {
+		ID string `firestore:"id" json:"id"`
+		benchttp.Report
+	}{
+		ID:     id.String(),
+		Report: data,
+	}
+
+	_, err = s.collection().Doc(id.String()).Create(ctx, doc)
+	if err != nil {
+		return "", fmt.Errorf("failed to create Firestore document: %w", err)
+	}
+
+	return id.String(), nil
 }
 
 // Retrieve retrieves a document from Firestore given its ID.
