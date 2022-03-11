@@ -11,6 +11,7 @@ import (
 	"github.com/joho/godotenv"
 
 	"github.com/benchttp/server"
+	"github.com/benchttp/server/jwt"
 	"github.com/benchttp/server/services/firestore"
 	"github.com/benchttp/server/services/github"
 	"github.com/benchttp/server/services/postgresql"
@@ -83,6 +84,9 @@ func run() error {
 	ss := postgresql.NewStatsService(dbConn)
 
 	us := postgresql.NewUserService(dbConn)
+
+	secretKey := os.Getenv("JWT_SECRET")
+	jwt.SetSecretKey([]byte(secretKey))
 
 	oc := github.NewOauth("1234", "hi mom")
 
