@@ -53,6 +53,22 @@ func (s *Server) handleSignin(w http.ResponseWriter, r *http.Request) {
 	}, 201)
 }
 
+func (s *Server) handleCreateAccessToken(w http.ResponseWriter, r *http.Request) {
+	// TODO
+	name, email := "marcel patulacci", "marcelpatulacci@policenationale.fr"
+
+	accessToken, err := createToken(name, email)
+	if err != nil {
+		writeError(w, &ErrInternal)
+	}
+
+	writeJSON(w, struct {
+		AccessToken string `json:"accessToken"`
+	}{
+		AccessToken: accessToken,
+	}, 201)
+}
+
 func createToken(name, email string) (string, error) {
 	claims := jwt.NewClaims(name, email, time.Now().Add(24*time.Hour))
 	return jwt.Sign(claims)
