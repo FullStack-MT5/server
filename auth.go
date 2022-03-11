@@ -3,6 +3,9 @@ package server
 import (
 	"encoding/json"
 	"net/http"
+	"time"
+
+	"github.com/benchttp/server/jwt"
 )
 
 func (s *Server) handleSignin(w http.ResponseWriter, r *http.Request) {
@@ -17,17 +20,40 @@ func (s *Server) handleSignin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := s.OAuthClient.ExchangeForAccessToken(body.Code)
+	ghToken, err := s.OAuthClient.ExchangeForAccessToken(body.Code)
 	if err != nil {
 		writeError(w, &ErrBadRequest)
 	}
 
-	name, email, err := s.OAuthClient.GetUser(token)
+	name, email, err := s.OAuthClient.GetUser(ghToken)
 	if err != nil {
 		writeError(w, &ErrInternal)
 	}
 
 	// if user does not exists -> create new user
-	// sign jwt
-	// send back jwt
+
+	// webToken authenticates the user from the webapp.
+	webToken, err := createToken(name, email)
+	if err != nil {
+		writeError(w, &ErrInternal)
+	}
+
+	// accessToken authenticates the user from the runner.
+	accessToken, err := createToken(name, email)
+	if err != nil {
+		writeError(w, &ErrInternal)
+	}
+
+	writeJSON(w, struct {
+		WebToken    string `json:"jwt"`
+		AccessToken string `json:"accessToken"`
+	}{
+		WebToken:    webToken,
+		AccessToken: accessToken,
+	}, 201)
+}
+
+func createToken(name, email string) (string, error) {
+	claims := jwt.NewClaims(name, email, time.Now().Add(24*time.Hour))
+	return jwt.Sign(claims)
 }
