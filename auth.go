@@ -10,7 +10,6 @@ import (
 )
 
 func (s *Server) handleSignin(w http.ResponseWriter, r *http.Request) {
-	// TODO sync with front-end regarding the data structure
 	var body struct {
 		Code string `json:"code"`
 	}
@@ -54,19 +53,10 @@ func (s *Server) handleSignin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// accessToken authenticates the user from the runner.
-	accessToken, err := createToken(user.Name, user.Email)
-	if err != nil {
-		writeError(w, &ErrInternal)
-		return
-	}
-
 	writeJSON(w, struct {
-		WebToken    string `json:"jwt"`
-		AccessToken string `json:"accessToken"`
+		WebToken string `json:"jwt"`
 	}{
-		WebToken:    webToken,
-		AccessToken: accessToken,
+		WebToken: webToken,
 	}, 201)
 }
 
