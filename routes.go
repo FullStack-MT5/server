@@ -38,17 +38,17 @@ func (s *Server) registerRoutes() {
 
 	v1 := s.router.PathPrefix("/v1").Subrouter()
 
-	v1.HandleFunc("/reports", s.createReport).Methods("POST")
-
-	v1.HandleFunc("/reports/"+idPathVar, s.retrieveReport).Methods("GET")
-
-	v1.HandleFunc("/stats", s.retrieveAllStats).Methods("GET")
-
-	v1.HandleFunc("/stats/"+idPathVar, s.retrieveStatsByID).Methods("GET")
-
+	// Auth
 	v1.HandleFunc("/signin", s.handleSignin).Methods("POST")
+	v1.HandleFunc("/token", mustAuth(s.handleCreateAccessToken)).Methods("GET")
 
-	v1.HandleFunc("/token", s.handleCreateAccessToken).Methods("GET")
+	// Reports
+	v1.HandleFunc("/reports", mustAuth(s.createReport)).Methods("POST")
+	v1.HandleFunc("/reports/"+idPathVar, mustAuth(s.retrieveReport)).Methods("GET")
+
+	// Stats
+	v1.HandleFunc("/stats", mustAuth(s.retrieveAllStats)).Methods("GET")
+	v1.HandleFunc("/stats/"+idPathVar, mustAuth(s.retrieveStatsByID)).Methods("GET")
 }
 
 func handleRoot(w http.ResponseWriter, _ *http.Request) {
